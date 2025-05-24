@@ -22,10 +22,10 @@ const port = process.env.PORT || 4000;
 (0, db_connection_1.connect)();
 // middlewares 
 app.use((0, cors_1.default)());
-app.use((req, res, next) => {
-    console.log("this");
-    next();
-});
+// app.use((req,res,next)=>{
+//     console.log("this");
+//     next();
+// })
 app.use(body_parser_1.default.json());
 app.use((0, cookie_parser_1.default)());
 app.use((0, morgan_1.default)('tiny'));

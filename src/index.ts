@@ -22,10 +22,10 @@ connect();
 
 // middlewares 
 app.use(cors())
-app.use((req,res,next)=>{
-    console.log("this");
-    next();
-})
+// app.use((req,res,next)=>{
+//     console.log("this");
+//     next();
+// })
 app.use(bodyParser.json());
 app.use(cookieParser());
 app.use(morgan('tiny'));
