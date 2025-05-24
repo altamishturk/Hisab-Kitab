@@ -103,6 +103,9 @@ export const getCards =  async (req:Request,res:Response,next:NextFunction) => {
         })
 
     } catch (error) {
+
+        console.log(error);
+
         res.status(400).json({
             success: false,
             message: ""

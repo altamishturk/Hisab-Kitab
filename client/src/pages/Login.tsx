@@ -1,17 +1,25 @@
 import Section from "../components/Section";
 import { useForm } from 'react-hook-form';
-import { default as axios } from 'axios';
+import { redirect } from "react-router";
+import { axiosInstance } from "../utils/axiosInstance";
+import { useState } from "react";
 
 export function Login() {
-    const {register,handleSubmit,formState: { errors }} = useForm();
-
+    const {register,handleSubmit} = useForm();
+    const [isLoading, setIsLoading] = useState(false);
 
     const submitForm = async (data:any) => {
         try {
-            const d = await axios.post("http://localhost:4000/api/v1/auth",data,{});
-            localStorage.setItem("hisab-kitab-token",d.data.token)
+            setIsLoading(true);
+            const d = await axiosInstance.post("/auth",data,{});
+            localStorage.setItem("hisab-kitab-token",d.data.token);
+            return redirect("/");
+
         } catch (error) {
             console.log(error);
+        }
+        finally {
+           setIsLoading(false); 
         }
     }
 
@@ -43,7 +51,7 @@ export function Login() {
                             </div>
                             <a href="/" className="text-sm font-medium text-primary-600 hover:underline ">Forgot password?</a>
                         </div>
-                        <button onClick={handleSubmit((data) => submitForm(data))} type="submit" className="w-full text-white bg-blue-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">Sign in</button>
+                        <button onClick={handleSubmit((data) => submitForm(data))} type="submit" className="w-full text-white bg-blue-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center" disabled={isLoading}>{isLoading? "Signing in..":"Sign in"}</button>
                         <p className="text-sm font-light text-gray-500">
                             Don’t have an account yet? <a href="/" className="font-medium text-primary-600 hover:underline">Sign up</a>
                         </p>

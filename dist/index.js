@@ -19,8 +19,13 @@ const card_1 = __importDefault(require("./routes/card"));
 dotenv_1.default.config();
 const app = (0, express_1.default)();
 const port = process.env.PORT || 4000;
+(0, db_connection_1.connect)();
 // middlewares 
 app.use((0, cors_1.default)());
+app.use((req, res, next) => {
+    console.log("this");
+    next();
+});
 app.use(body_parser_1.default.json());
 app.use((0, cookie_parser_1.default)());
 app.use((0, morgan_1.default)('tiny'));
@@ -31,5 +36,4 @@ app.use("/api/v1/emails", email_1.default);
 app.use("/api/v1/cards", card_1.default);
 app.listen(port, () => {
     console.log(`server is running at ${port}`);
-    (0, db_connection_1.connect)();
 });

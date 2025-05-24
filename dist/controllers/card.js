@@ -81,6 +81,7 @@ const getCards = async (req, res, next) => {
         });
     }
     catch (error) {
+        console.log(error);
         res.status(400).json({
             success: false,
             message: ""

@@ -18,9 +18,14 @@ const app = exporess();
 const port = process.env.PORT || 4000;
 
 
- 
+connect();
+
 // middlewares 
 app.use(cors())
+app.use((req,res,next)=>{
+    console.log("this");
+    next();
+})
 app.use(bodyParser.json());
 app.use(cookieParser());
 app.use(morgan('tiny'));
@@ -35,7 +40,6 @@ app.use("/api/v1/cards",cardRoutes);
 
 app.listen(port,()=>{
     console.log(`server is running at ${port}`);
-    connect();
 })
 
 
