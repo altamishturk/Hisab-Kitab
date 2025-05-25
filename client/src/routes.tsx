@@ -3,7 +3,7 @@ import {Login} from "./pages/Login";
 import {Signup} from "./pages/Signup";
 import {Card} from "./pages/card/index";
 import { Navbar } from "./components/Navbar";
-
+import { ToastContainer } from 'react-toastify';
 
 const Layout = () => (
   <>
@@ -13,6 +13,7 @@ const Layout = () => (
     <main className="pt-[73px] p-4 w-full min-h-[100vh] max-w-screen-xl mx-auto">
       <Outlet />
     </main>
+    <ToastContainer position="bottom-center"/>
   </>
 );
 

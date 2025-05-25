@@ -7,16 +7,17 @@ import bcrypt from "bcrypt";
 
 
 export const getLoggedInUser = async (req:Request,res:Response,next:NextFunction)=>{
-  try {
-    res.status(200).json({
-        success: true,
-        message: 'user fount',
-        user: (req as any).user
-    })
+        
+        try {
+            res.status(200).json({
+                success: true,
+                message: 'user fount',
+                user: (req as any).user
+            })
 
-} catch (error) {
+        } catch (error) {
             
-            return res.status(400).json({
+        res.status(400).json({
                 success: false,
                 message: "Server Error!"
             })

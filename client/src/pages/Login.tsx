@@ -1,22 +1,25 @@
 import Section from "../components/Section";
 import { useForm } from 'react-hook-form';
-import { redirect } from "react-router";
+import { useNavigate } from "react-router";
 import { axiosInstance } from "../utils/axiosInstance";
 import { useState } from "react";
+import { toast } from "react-toastify";
 
 export function Login() {
     const {register,handleSubmit} = useForm();
     const [isLoading, setIsLoading] = useState(false);
+    const navigate = useNavigate();
 
     const submitForm = async (data:any) => {
         try {
             setIsLoading(true);
             const d = await axiosInstance.post("/auth",data,{});
             localStorage.setItem("hisab-kitab-token",d.data.token);
-            return redirect("/");
+            return navigate("/");
 
-        } catch (error) {
+        } catch (error:any) {
             console.log(error);
+            toast.error(error?.response?.data?.message);
         }
         finally {
            setIsLoading(false); 

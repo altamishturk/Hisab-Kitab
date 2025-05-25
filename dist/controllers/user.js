@@ -10,7 +10,7 @@ const getLoggedInUser = async (req, res, next) => {
         });
     }
     catch (error) {
-        return res.status(400).json({
+        res.status(400).json({
             success: false,
             message: "Server Error!"
         });

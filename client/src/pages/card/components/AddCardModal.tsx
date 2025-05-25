@@ -4,8 +4,14 @@ import { useForm } from 'react-hook-form';
 import { axiosInstance } from '../../../utils/axiosInstance';
 
 export function AddCardModal({setCards,setShowAddCardModal}:any) {
-    const createCardForm = useForm();
-    const [villages, setVillages] = useState([]);
+    const createCardForm = useForm({
+        defaultValues: {
+            yourName: "Altamish",
+            giverName: "",
+            giverVillage: ""
+        }
+    });
+    const [, setVillages] = useState([]);
 
     const handleSubmit = async (data:any) => {
         try {
@@ -40,12 +46,13 @@ export function AddCardModal({setCards,setShowAddCardModal}:any) {
             <form className='flex flex-col gap-2 max-w-full w-[500px]'>
                 <input {...createCardForm.register('yourName')} className='border p-2 rounded-md' placeholder='Your Name...'/>
                 <input {...createCardForm.register('giverName')} className='border p-2 rounded-md' placeholder='Guest Name...'/>
-                <select {...createCardForm.register("giverVillage", { required: "Please select a Village" })} className='border p-2 rounded-md'>
+                <input {...createCardForm.register('giverVillage')} className='border p-2 rounded-md' placeholder='Guest Village...'/>
+                {/* <select {...createCardForm.register("giverVillage", { required: "Please select a Village" })} className='border p-2 rounded-md'>
                     <option value="">-- Select Village --</option>
                     {
                         villages?.map((vill,idx) => <option key={idx} value={vill}>{vill}</option>)
                     }
-                </select>
+                </select> */}
                 <button onClick={createCardForm.handleSubmit((data) => handleSubmit(data))} className='mt-6 bg-blue-600 text-white p-2 rounded-md'>Create Card</button>
             </form>
         </Modal>
