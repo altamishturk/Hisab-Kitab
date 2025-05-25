@@ -14,7 +14,7 @@ export function CardItem({idx,setEditCard,card,searchTerm}:CardItemProps) {
     const [showDetail, setShowDetail] = useState(false);
     const outstandingMoney = calculateTotalAmount(card.giftReceived)-calculateTotalAmount(card.giftsWeGave);
   
-    return <div key={idx}  className="relative p-2 md:p-5 rounded-md bg-white shadow-lg border-t border-t-gray-100"> 
+    return <div key={idx}  className="flex-1 min-w-[300px] relative p-2 md:p-5 rounded-md bg-white shadow-lg border-t border-t-gray-100"> 
                 <div className="absolute top-0 left-0  h-[20px] rounded-md text-gray-300 pl-1 text-xs">{idx+1}</div>
 
                 <div className="flex flex-wrap items-center gap-2 md:gap-5">

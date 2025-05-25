@@ -10,9 +10,14 @@ export function useCardLogic() {
 
     useEffect(() => {
             (async () => {  
-                const response = await axiosInstance.get(`/cards`);
-                if(response?.data?.cards){
-                    setCards(response?.data?.cards);
+                try {
+                    const response = await axiosInstance.get(`/cards`);
+                    if(response?.data?.cards){
+                        setCards(response?.data?.cards);
+                    }
+                    
+                } catch (error) {
+                    console.log(error);
                 }
             })()
     }, []);

@@ -8,7 +8,10 @@ export function AddCardModal({setCards,setShowAddCardModal}:any) {
         defaultValues: {
             yourName: "Altamish",
             giverName: "",
-            giverVillage: ""
+            giverVillage: "",
+            spouseName: "Robina",
+            reveivedMoney: 0,
+            reveivedGave: 0,
         }
     });
     const [, setVillages] = useState([]);
@@ -19,7 +22,8 @@ export function AddCardModal({setCards,setShowAddCardModal}:any) {
             // console.log(response.data.card);
             setCards((prev:any) => {
                 return [response.data.card,...prev];
-            })
+            });
+            setShowAddCardModal(false);
         } 
         catch (error:any) {
             console.error(error?.response?.data?.message || error?.message);
@@ -53,6 +57,25 @@ export function AddCardModal({setCards,setShowAddCardModal}:any) {
                         villages?.map((vill,idx) => <option key={idx} value={vill}>{vill}</option>)
                     }
                 </select> */}
+
+                <div className="flex mt-4 gap-2 items-end">
+                    <div className="flex-1">
+                        <input placeholder='Spouse Name...' id='spouseName' type='text' {...createCardForm.register('spouseName')} className='w-full border p-2 rounded-md'/>
+                    </div>
+                </div>
+                <div className="flex mt-4 gap-2 items-end">
+                    <div className="flex-1">
+                        <label htmlFor="reveivedMoney" className='text-gray-400'>Reveived Money</label>
+                        <input id='reveivedMoney' type='number' {...createCardForm.register('reveivedMoney')} className='w-full border p-2 rounded-md'/>
+                    </div>
+                </div>
+                <div className="flex mt-4 gap-2 items-end">
+                    <div className="flex-1">
+                        <label htmlFor="reveivedGave" className='text-gray-400'>Gave Money</label>
+                        <input id='reveivedGave' type='number' {...createCardForm.register('reveivedGave')} className='w-full border p-2 rounded-md'/>
+                    </div>
+                </div>
+
                 <button onClick={createCardForm.handleSubmit((data) => handleSubmit(data))} className='mt-6 bg-blue-600 text-white p-2 rounded-md'>Create Card</button>
             </form>
         </Modal>

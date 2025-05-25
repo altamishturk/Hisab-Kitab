@@ -4,8 +4,9 @@ import { useCardLogic } from './hooks/useCardLogic';
 import { AddCardModal } from './components/AddCardModal';
 import { Search } from './components/Search';
 import { CardItem } from './components/CardItem';
+import { calculateTotalAmount } from './utils/calculateTotalAmount';
 
-
+let total = 0;
 
 export function Card() {
     const {
@@ -20,6 +21,10 @@ export function Card() {
     } = useCardLogic();
 
 
+    // cards?.forEach((card:any) => {
+    //     total += calculateTotalAmount(card.giftReceived);
+    //     console.log(total);
+    // });
 
     return <Section >
         <div className="flex flex-col gap-4">
@@ -44,7 +49,7 @@ export function Card() {
             {
                 showAddCardModal && <AddCardModal setShowAddCardModal={setShowAddCardModal} setCards={setCards}/>
             }
-            <div className="flex items-start justify-center gap-2 md:gap-5 border-t border-t-4 mt-3 md:pt-5">
+            <div className="flex flex-wrap items-start justify-center gap-2 md:gap-5 border-t border-t-4 mt-3 md:pt-5">
                 {
                     (cards?.length === 0) && <div className='mt-10 text-gray-300'>
                         <div className='w-[50px] md:w-[100px] h-[50px] md:h-[100px] mx-auto'>

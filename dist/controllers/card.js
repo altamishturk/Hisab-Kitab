@@ -5,7 +5,15 @@ const card_1 = require("../models/card");
 const fetchVillageNames_1 = require("../utils/fetchVillageNames");
 const createCard = async (req, res, next) => {
     try {
-        const card = await card_1.Card.create({ name: "Altamish", giftGiverInfo: { name: req.body.giverName, village: req.body.giverVillage } });
+        const card = await card_1.Card.create({ user: req.user._id, name: "Altamish", giftGiverInfo: { name: req.body.giverName, village: req.body.giverVillage } });
+        if (!isNaN(Number(req.body.reveivedMoney)) && Number(req.body.reveivedMoney) !== 0) {
+            card.giftReceived.push({ date: new Date(), spouseName: req.body.spouseName, amount: Number(req.body.reveivedMoney) });
+            await card.save();
+        }
+        if (!isNaN(Number(req.body.reveivedGave)) && Number(req.body.reveivedGave) !== 0) {
+            card.giftsWeGave.push({ date: new Date(), spouseName: req.body.spouseName, amount: Number(req.body.reveivedGave) });
+            await card.save();
+        }
         res.status(201).json({
             success: true,
             message: "",
@@ -71,7 +79,7 @@ const getCards = async (req, res, next) => {
                 { 'giftGiverInfo.village': { $regex: safeSearch, $options: 'i' } }
             ];
         }
-        const cards = await card_1.Card.find(query);
+        const cards = await card_1.Card.find(query).sort({ createdAt: -1 });
         const villages = await (0, fetchVillageNames_1.fetchVillageNames)();
         res.status(201).json({
             success: true,

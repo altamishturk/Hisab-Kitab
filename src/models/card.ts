@@ -19,6 +19,7 @@ export interface ICard extends Document {
    giftReceived: IGiftsInfo[];
    giftsWeGave: IGiftsInfo[];
    giftGiverInfo: IGiftGiverInfo;
+   user: string | any;
 }
 
 
@@ -56,6 +57,10 @@ const EntrySchema = new Schema<ICard>({
         village: {
             type: String
         }
+    },
+    user: {
+        type: Schema.Types.ObjectId,
+        required: true
     }
   },{ timestamps: true });
 
