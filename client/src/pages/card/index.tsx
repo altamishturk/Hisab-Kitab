@@ -23,7 +23,7 @@ export function Card() {
 
     return <Section >
         <div className="flex flex-col gap-4">
-            <div className="flex justify-between gap-2 md:gap-5 mb-4">
+            <div className="flex justify-between gap-2 md:gap-5">
                 <svg 
                     xmlns="http://www.w3.org/2000/svg" 
                     fill="none" 
