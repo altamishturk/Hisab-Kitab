@@ -3,6 +3,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.getVillages = exports.getCards = exports.addGaveMoney = exports.addReceivedMoney = exports.createCard = void 0;
 const card_1 = require("../models/card");
 const fetchVillageNames_1 = require("../utils/fetchVillageNames");
+// (async () => {
+//     const w = await Card.findByIdAndDelete("683403696c1f1028d8f265fb");
+//     console.log(w);
+// })()     
 const createCard = async (req, res, next) => {
     try {
         const card = await card_1.Card.create({ user: req.user._id, name: "Altamish", giftGiverInfo: { name: req.body.giverName, village: req.body.giverVillage } });
