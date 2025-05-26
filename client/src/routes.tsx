@@ -4,6 +4,7 @@ import {Signup} from "./pages/Signup";
 import {Card} from "./pages/card/index";
 import { Navbar } from "./components/Navbar";
 import { ToastContainer } from 'react-toastify';
+import { Home } from "./pages/Home";
 
 const Layout = () => (
   <>
@@ -24,6 +25,10 @@ export const router = createBrowserRouter([
     children: [
       {
         path: "/",
+        element: <Home/>,
+      },
+      {
+        path: "/card",
         element: <Card/>,
       },
       {
