@@ -21,6 +21,9 @@ export function AddCardModal({setCards,setShowAddCardModal}:any) {
             const response = await axiosInstance.post("/cards",data);
             // console.log(response.data.card);
             setCards((prev:any) => {
+                if(!prev){
+                    return [response.data.card]
+                }
                 return [response.data.card,...prev];
             });
             setShowAddCardModal(false);
