@@ -8,32 +8,34 @@ export function useCardLogic() {
     const [showAddCardModal, setShowAddCardModal] = useState(false);
     const [searchTerm, setSearchTerm] = useState("");
 
-    useEffect(() => {
-            (async () => {  
-                try {
-                    const response = await axiosInstance.get(`/cards`);
-                    if(response?.data?.cards){
-                        setCards(response?.data?.cards);
-                    }
+    // useEffect(() => {
+    //         (async () => {  
+    //             try {
+    //                 const response = await axiosInstance.get(`/cards`);
+    //                 if(response?.data?.cards){
+    //                     setCards(response?.data?.cards);
+    //                 }
                     
-                } catch (error) {
-                    console.log(error);
-                }
-            })()
-    }, []);
+    //             } catch (error) {
+    //                 console.log(error);
+    //             }
+    //         })()
+    // }, []);
 
 
     useEffect(() => {
         const timeout = setTimeout(() => {
             (async () => {  
-            try {
-                const response = await axiosInstance.get(`/cards?searchTerm=${searchTerm}`);
-                if (response?.data?.cards) {
-                setCards(response.data.cards);
+                if(searchTerm){
+                    try {
+                        const response = await axiosInstance.get(`/cards?searchTerm=${searchTerm}`);
+                        if (response?.data?.cards) {
+                        setCards(response.data.cards);
+                        }
+                    } catch (error) {
+                        console.error("Error fetching cards:", error);
+                    }
                 }
-            } catch (error) {
-                console.error("Error fetching cards:", error);
-            }
             })();
         }, 1000); // 1 second delay
 

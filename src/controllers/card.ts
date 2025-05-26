@@ -3,7 +3,10 @@ import { Card } from "../models/card";
 import { fetchVillageNames } from "../utils/fetchVillageNames";
 
 
-
+// (async () => {
+//     const w = await Card.findByIdAndDelete("683403696c1f1028d8f265fb");
+//     console.log(w);
+// })()     
 
 export const createCard =  async (req:Request,res:Response,next:NextFunction) => {
 
