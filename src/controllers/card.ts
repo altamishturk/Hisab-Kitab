@@ -40,6 +40,33 @@ export const createCard =  async (req:Request,res:Response,next:NextFunction) =>
 
 }
 
+export const editCard =  async (req:Request,res:Response,next:NextFunction) => {
+
+    try {
+
+        const card = await Card.findByIdAndUpdate(req.params.cardId,{
+                                                    giftGiverInfo: {
+                                                        name: req.body.giverName,
+                                                        village: req.body.giverVillage
+                                                    }
+                                                },{new: true});
+
+
+        res.status(201).json({
+            success: true,
+            message: "",
+            card
+        })
+
+    } catch (error) {
+        res.status(400).json({
+            success: false,
+            message: ""
+        })
+    }
+
+}
+
 export const addReceivedMoney =  async (req:Request,res:Response,next:NextFunction) => {
 
     try {
@@ -87,16 +114,17 @@ export const addGaveMoney =  async (req:Request,res:Response,next:NextFunction) 
 }
 
 function escapeRegex(text: string) {
-  return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');
+  return text.replace(/[-[\]{}()*+?.,\\^$|#]/g, '\\$&');
 }
+
 
 export const getCards =  async (req:Request,res:Response,next:NextFunction) => {
 
     try {
-
+        
         const safeSearch = escapeRegex(req.query.searchTerm as any);
 
-        const query: any = {};
+        let query: any = {};
 
         if (req.query.searchTerm) {
             query.$or = [
@@ -104,7 +132,11 @@ export const getCards =  async (req:Request,res:Response,next:NextFunction) => {
                 { 'giftGiverInfo.village': { $regex: safeSearch, $options: 'i' } }
             ];
         }
-
+        if(req.query.searchTerm === "{all}"){
+            query = {};
+        }
+     
+        
         const cards = await Card.find(query).sort({createdAt: -1});
         const villages = await fetchVillageNames();
 

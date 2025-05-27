@@ -1,20 +1,23 @@
 import { useState } from 'react'
 import { calculateTotalAmount } from '../utils/calculateTotalAmount';
 import { HighlightedText } from './highlightText';
+import { EditSVG } from '../../../components/SVGs/EditSVG';
+import { PlusSVG } from '../../../components/SVGs/PlusSVG';
 
 
 interface CardItemProps {
     idx: number;
-    setEditCard: any;
+    setCardToEdit: any;
     card: any;
     searchTerm: string;
+    setCardToAddMoney: any;
 }
 
-export function CardItem({idx,setEditCard,card,searchTerm}:CardItemProps) {
+export function CardItem({idx,setCardToEdit,card,searchTerm,setCardToAddMoney}:CardItemProps) {
     const [showDetail, setShowDetail] = useState(false);
     const outstandingMoney = calculateTotalAmount(card.giftReceived)-calculateTotalAmount(card.giftsWeGave);
   
-    return <div key={idx}  className="flex-1 min-w-[300px] relative p-2 md:p-5 rounded-md bg-white shadow-lg border-t border-t-gray-100"> 
+    return <div style={{backgroundColor: showDetail? "#c2c2a3":"#f5f5f0"}} key={idx} className="flex-1 min-w-[300px] relative p-2 md:p-5 rounded-md bg-white shadow-lg border-t border-t-gray-100"> 
                 <div className="absolute top-0 left-0  h-[20px] rounded-md text-gray-300 pl-1 text-xs">{idx+1}</div>
 
                 <div className="flex flex-wrap items-center gap-2 md:gap-5">
@@ -59,19 +62,16 @@ export function CardItem({idx,setEditCard,card,searchTerm}:CardItemProps) {
                 {
                     showDetail && <>
                         <div className="flex flex-col items-start gap-2 pt-3 mt-3 border-t">
-                            <button onClick={()=>{setEditCard(card)}} className='flex items-center gap-1 border p-2 rounded-md'>
-                                <span>New Transaction</span>
-                                <svg 
-                                    xmlns="http://www.w3.org/2000/svg" 
-                                    fill="none" 
-                                    viewBox="0 0 24 24" 
-                                    strokeWidth={1.5} 
-                                    stroke="currentColor" 
-                                    className="size-4"
-                                >
-                                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-                                </svg>
-                            </button>
+                            <div className="flex gap-2">
+                                <button onClick={()=>{setCardToAddMoney(card)}} className='flex items-center gap-1 border p-2 rounded-md'>
+                                    <span>New Transaction</span>
+                                    <PlusSVG/>
+                                </button>
+                                <button onClick={()=>{setCardToEdit(card)}} className='flex items-center gap-1 border p-2 rounded-md'>
+                                    <EditSVG/>
+                                    <span>Edit</span>
+                                </button>
+                            </div>
                             <div className="flex flex-wrap gap-2">
                                 {
                                    card.giftReceived.length === 0 && card.giftsWeGave.length === 0 && <span className='text-gray-400'>No transaction history</span>
