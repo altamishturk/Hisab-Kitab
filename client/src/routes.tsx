@@ -7,15 +7,15 @@ import { ToastContainer } from 'react-toastify';
 import { Home } from "./pages/Home";
 
 const Layout = () => (
-  <>
-    <header>
+  <div className="w-[100vw] min-h-[100vh]  bg-gray-200">
+    <header className="bg-gray-200">
       <Navbar />
     </header>
-    <main className="pt-[73px] p-4 w-full min-h-[100vh] max-w-screen-xl mx-auto">
+    <main className="p-4 pt-[57px] w-full min-h-[100vh] max-w-screen-xl mx-auto bg-gray-200">
       <Outlet />
     </main>
     <ToastContainer position="bottom-center"/>
-  </>
+  </div>
 );
 
 export const router = createBrowserRouter([

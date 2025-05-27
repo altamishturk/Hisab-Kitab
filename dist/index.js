@@ -18,7 +18,7 @@ const email_1 = __importDefault(require("./routes/email"));
 const card_1 = __importDefault(require("./routes/card"));
 dotenv_1.default.config();
 const app = (0, express_1.default)();
-const port = process.env.PORT || 4000;
+const port = process.env.PORT || 4001;
 (0, db_connection_1.connect)();
 // middlewares 
 app.use((0, cors_1.default)());

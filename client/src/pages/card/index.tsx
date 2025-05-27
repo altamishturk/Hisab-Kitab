@@ -29,7 +29,7 @@ export function Card() {
 
     return <Section >
         <div className="flex flex-col gap-4">
-            <div className="flex justify-between gap-2 md:gap-5">
+            <div className="bg-gray-200 flex justify-between gap-2 md:gap-5 sticky pt-[16px] top-[57px] z-[100] border-b border-b-gray-300 pb-3 md:pb-5 border-dotted border-b-4">
                 <svg 
                     xmlns="http://www.w3.org/2000/svg" 
                     fill="none" 
@@ -56,7 +56,7 @@ export function Card() {
                 showAddCardModal && <AddCardModal setShowAddCardModal={setShowAddCardModal} setCards={setCards}/>
             }
             
-            <div className="flex flex-wrap items-start justify-center gap-2 md:gap-5 border-t border-dotted border-t-4 mt-3 md:pt-5">
+            <div className="flex flex-wrap items-start justify-center gap-2 md:gap-5">
                 {
                     (cards?.length === 0) && <div className='mt-10 text-gray-300'>
                         <div className='w-[50px] md:w-[100px] h-[50px] md:h-[100px] mx-auto mb-2 md:mb-10 mt-3'>
@@ -111,7 +111,7 @@ export function Card() {
                             </svg>
                         </div> 
                         <h1 className='text-xl md:text-5xl text-center'>Use the search above to find cards.</h1>
-                        <p className='text-yellow-700/70 text-center mt-2 md:mt-4'>Type {"{all}"} in the search bar to view all cards.</p>
+                        <p className='text-yellow-700/70 text-center mt-2 md:mt-4 test-xs md:text-md'>Type {"{all}"} in the search bar to view all cards.</p>
                     </div>
                 }
                 {

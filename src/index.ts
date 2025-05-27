@@ -15,7 +15,7 @@ import cardRoutes from "./routes/card";
 
 dotenv.config();
 const app = exporess();
-const port = process.env.PORT || 4000;
+const port = process.env.PORT || 4001;
 
 
 connect();
