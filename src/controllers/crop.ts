@@ -9,7 +9,7 @@ import {Crop} from "../models/crop";
 
 export const createCrop = async (req: Request, res: Response) => {
   try {
-    const crop = await Crop.create(req.body);
+    const crop = await Crop.create({...req.body,user: (req as any).user._id});
     res.status(201).json({crop});
   } catch (error) {
     res.status(500).json({ message: "Error creating crop record", error });
@@ -82,6 +82,65 @@ export const addYourExpense = async (req: Request, res: Response) => {
   }
 };
 
+export const addPartnerExpense = async (req: Request, res: Response) => {
+  try {
+      
+      const crop = await Crop.findByIdAndUpdate(req.params.cropId,{
+        $push: {partnerExpenses: req.body}
+      },{ new: true, runValidators: true });
+
+      if (!crop) {
+        throw new Error("Crop not found");
+      }
+
+      res.status(200).json({crop});
+
+  } 
+  catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "Error updating crop", error });
+  }
+};
+
+export const addYourTakenMoney = async (req: Request, res: Response) => {
+  try {
+      
+      const crop = await Crop.findByIdAndUpdate(req.params.cropId,{
+        $push: {yourTakenMoney: req.body}
+      },{ new: true, runValidators: true });
+
+      if (!crop) {
+        throw new Error("Crop not found");
+      }
+
+      res.status(200).json({crop});
+
+  } 
+  catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "Error updating crop", error });
+  }
+};
+
+export const addPartnerTakenMoney = async (req: Request, res: Response) => {
+  try {
+      
+      const crop = await Crop.findByIdAndUpdate(req.params.cropId,{
+        $push: {partnerTakenMoney: req.body}
+      },{ new: true, runValidators: true });
+
+      if (!crop) {
+        throw new Error("Crop not found");
+      }
+
+      res.status(200).json({crop});
+
+  } 
+  catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "Error updating crop", error });
+  }
+};
 
 export const addSale = async (req: Request, res: Response) => {
   try {

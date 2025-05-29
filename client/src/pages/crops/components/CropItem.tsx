@@ -1,60 +1,57 @@
-import React from 'react'
 import { NavLink } from 'react-router';
+import { sumByKey } from '../../../utils/sumByKey';
 
 interface CropItemProps {
     crop: any;
 }
 
-
-
 export function CropItem({crop}:CropItemProps) {
-  return (
-                <div className="w-full max-w-sm p-4 bg-white border border-gray-200 rounded-lg shadow-sm sm:p-6 mt-3 md:mt-5">
-                    <h5 className="text-xl font-bold leading-none text-gray-700 text-center">{crop.title}</h5>
-                    <p className="my-4 text-center my-1 mb-5 text-gray-500">{crop.description}</p>
-
-                    <div className="flex flex-wrap justify-between gap-2">
-                        {
-                            crop.partnershipType === "solo" && <>
-                                <MiniCard label={`Expenses`} amount={100}/>
-                                <MiniCard label={`Sales`} amount={100}/>
-                                <MiniCard label={`Profit`} amount={100}/>
-                            </>
-                        }
-                        {
-                            crop.partnershipType === "partnered" && <>
-                                <MiniCard label={`${crop.yourName} Expense`} amount={100}/>
-                                <MiniCard label={`${crop.partnerName} Expense`} amount={100}/>
-                                <MiniCard label={`Shared Expenses`} amount={100}/>
-                                <MiniCard label={`Sales`} amount={100}/>
-                                <MiniCard label={`Sales Money ${crop.yourName} have`} amount={100}/>
-                                <MiniCard label={`Sales Money ${crop.partnerName} have`} amount={100}/>
-                                <MiniCard label={`Profit`} amount={100}/>
-                            </>
-                        }
-
-                        <NavLink to={`/crops/${crop._id}`} className={"border p-2 rounded-md flex justify-center items-center"}>
-                            View Details
-                        </NavLink>
-                    </div>
-                </div>
+  return (<>
+                {
+                    crop.partnershipType === "solo" && <>
+                        <div className="bg-white p-6 rounded-xl flex flex-col justify-between min-w-[300px] flex-1">
+                            <div className='space-y-4 '>
+                                <h2 className="text-xl font-semibold text-gray-700">📌 {crop.title}</h2>
+                                <div className="text-gray-600">
+                                    <p><span className="font-medium">Crop Name:</span> {crop.cropName}</p>
+                                    <p><span className="font-medium">Description:</span> {crop.description}</p>
+                                    <p><span className="font-medium">Partners:</span> No</p>
+                                    <p><span className="font-medium">Your Expense:</span> {sumByKey(crop.yourExpenses,"amount")}</p>
+                                    <p><span className="font-medium">Sales:</span> {sumByKey(crop.sales,"amount")}</p>
+                                    <p><span className="font-medium">Total Profit:</span> {sumByKey(crop.sales,"amount")-sumByKey(crop.yourExpenses,"amount")}</p>
+                                    <p><span className="text-blue-600 underline"><NavLink to={`/crops/${crop._id}`}>View Details...</NavLink></span></p>
+                                </div>
+                            </div>
+                        </div>
+                    </>
+                }
+                {
+                    crop.partnershipType === "partnered" && <>
+                                <div className="bg-white p-6 rounded-xl flex flex-col justify-between min-w-[300px] flex-1">
+                                    <div className='space-y-4'>
+                                        <h2 className="text-xl font-semibold text-gray-700">📌 {crop.title}</h2>
+                                        <div className="text-gray-600">
+                                            <p><span className="font-medium">Crop Name:</span> {crop.cropName}</p>
+                                            <p><span className="font-medium">Description:</span> {crop.description}</p>
+                                            <p><span className="font-medium">Partners:</span> {crop.yourName} & {crop.partnerName}</p>
+                                            <p><span className="font-medium">Your Expense:</span> {sumByKey(crop.yourExpenses,"amount")}</p>
+                                            <p><span className="font-medium">Partner Expense:</span> {sumByKey(crop.partnerExpenses,"amount")}</p>
+                                            <p><span className="font-medium">Your Money Taken:</span> {sumByKey(crop.yourTakenMoney,"amount")}</p>
+                                            <p><span className="font-medium">Partner Money Taken:</span> {sumByKey(crop.partnerTakenMoney,"amount")}</p>
+                                            <p><span className="font-medium">Sales:</span> {sumByKey(crop.sales,"amount")}</p>
+                                            <p><span className="font-medium">Total Profit:</span> {sumByKey(crop.sales,"amount")-(sumByKey(crop.yourExpenses,"amount")+sumByKey(crop.partnerExpenses,"amount"))}</p>
+                                            <p><span className="text-blue-600 underline"><NavLink to={`/crops/${crop._id}`}>View Details...</NavLink></span></p>
+                                        </div>
+                                    </div>
+                                </div>
+                    </>
+                }
+                
+        </>        
   )
 }
 
 
 
-interface MiniCardProps {
-    label: string;
-    amount: number;
-}
-
-function MiniCard({label,amount}:MiniCardProps){
 
 
-    return <>
-        <div className="min-w-[120px] flex-1 border  p-2 rounded-md flex flex-col items-center justify-center">
-            <dt className="mb-2 text-3xl font-extrabold">₹ {amount}</dt>
-            <dd className="text-gray-500 text-xs text-center">{label}</dd>
-        </div>
-    </>
-}

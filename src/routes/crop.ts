@@ -7,6 +7,9 @@ import {
   deleteCrop,
   addYourExpense,
   addSale,
+  addPartnerExpense,
+  addYourTakenMoney,
+  addPartnerTakenMoney,
 } from "../controllers/crop";
 import { isLoggedIn } from "../middlewares/auth";
 
@@ -17,6 +20,15 @@ router.post("/", isLoggedIn , createCrop);
 
 // add your expense 
 router.post("/your/expense/:cropId", isLoggedIn , addYourExpense);
+
+// add partner expense 
+router.post("/partner/expense/:cropId", isLoggedIn , addPartnerExpense);
+
+// add your taken money 
+router.post("/your/money/:cropId", isLoggedIn , addYourTakenMoney);
+
+// add partner taken money 
+router.post("/partner/money/:cropId", isLoggedIn , addPartnerTakenMoney);
 
 // add sales 
 router.post("/sale/:cropId", isLoggedIn , addSale);

@@ -11,6 +11,12 @@ const router = express_1.default.Router();
 router.post("/", auth_1.isLoggedIn, crop_1.createCrop);
 // add your expense 
 router.post("/your/expense/:cropId", auth_1.isLoggedIn, crop_1.addYourExpense);
+// add partner expense 
+router.post("/partner/expense/:cropId", auth_1.isLoggedIn, crop_1.addPartnerExpense);
+// add your taken money 
+router.post("/your/money/:cropId", auth_1.isLoggedIn, crop_1.addYourTakenMoney);
+// add partner taken money 
+router.post("/partner/money/:cropId", auth_1.isLoggedIn, crop_1.addPartnerTakenMoney);
 // add sales 
 router.post("/sale/:cropId", auth_1.isLoggedIn, crop_1.addSale);
 // Get all crop records

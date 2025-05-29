@@ -27,9 +27,9 @@ export function Crops() {
                     showAddCropModal && <AddNewCropModal setShowAddCropModal={setShowAddCropModal} setCrops={setCrops}/>
                 }
 
-                <div className="flex flex-wrap justify-center gap-2 md:gap-5">
+                <div className="flex flex-wrap justify-center gap-2 md:gap-5 pt-5">
                     {
-                        crops?.map((crop:any) => <CropItem crop={crop}/>)
+                        crops?.map((crop:any,idx:number) => <CropItem key={idx} crop={crop}/>)
                     }
                 </div>
             </div>

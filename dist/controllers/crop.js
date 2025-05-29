@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteCrop = exports.addSale = exports.addYourExpense = exports.updateCrop = exports.getCropById = exports.getAllCrops = exports.createCrop = void 0;
+exports.deleteCrop = exports.addSale = exports.addPartnerTakenMoney = exports.addYourTakenMoney = exports.addPartnerExpense = exports.addYourExpense = exports.updateCrop = exports.getCropById = exports.getAllCrops = exports.createCrop = void 0;
 const crop_1 = require("../models/crop");
 // (async () => {
 //   const s = await Crop.find().populate("user");
@@ -8,7 +8,7 @@ const crop_1 = require("../models/crop");
 // })()
 const createCrop = async (req, res) => {
     try {
-        const crop = await crop_1.Crop.create(req.body);
+        const crop = await crop_1.Crop.create({ ...req.body, user: req.user._id });
         res.status(201).json({ crop });
     }
     catch (error) {
@@ -69,6 +69,54 @@ const addYourExpense = async (req, res) => {
     }
 };
 exports.addYourExpense = addYourExpense;
+const addPartnerExpense = async (req, res) => {
+    try {
+        const crop = await crop_1.Crop.findByIdAndUpdate(req.params.cropId, {
+            $push: { partnerExpenses: req.body }
+        }, { new: true, runValidators: true });
+        if (!crop) {
+            throw new Error("Crop not found");
+        }
+        res.status(200).json({ crop });
+    }
+    catch (error) {
+        console.log(error);
+        res.status(500).json({ message: "Error updating crop", error });
+    }
+};
+exports.addPartnerExpense = addPartnerExpense;
+const addYourTakenMoney = async (req, res) => {
+    try {
+        const crop = await crop_1.Crop.findByIdAndUpdate(req.params.cropId, {
+            $push: { yourTakenMoney: req.body }
+        }, { new: true, runValidators: true });
+        if (!crop) {
+            throw new Error("Crop not found");
+        }
+        res.status(200).json({ crop });
+    }
+    catch (error) {
+        console.log(error);
+        res.status(500).json({ message: "Error updating crop", error });
+    }
+};
+exports.addYourTakenMoney = addYourTakenMoney;
+const addPartnerTakenMoney = async (req, res) => {
+    try {
+        const crop = await crop_1.Crop.findByIdAndUpdate(req.params.cropId, {
+            $push: { partnerTakenMoney: req.body }
+        }, { new: true, runValidators: true });
+        if (!crop) {
+            throw new Error("Crop not found");
+        }
+        res.status(200).json({ crop });
+    }
+    catch (error) {
+        console.log(error);
+        res.status(500).json({ message: "Error updating crop", error });
+    }
+};
+exports.addPartnerTakenMoney = addPartnerTakenMoney;
 const addSale = async (req, res) => {
     try {
         const crop = await crop_1.Crop.findByIdAndUpdate(req.params.cropId, {

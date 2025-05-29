@@ -47,6 +47,7 @@ const TakenMoneySchema = new mongoose_1.Schema({
     date: { type: Date, required: true },
     purpose: { type: String, required: true },
     note: { type: String, default: "" },
+    paymentMode: { type: String, enum: ["online", "offline"], required: true },
 });
 const SaleSchema = new mongoose_1.Schema({
     amount: { type: Number, required: true },

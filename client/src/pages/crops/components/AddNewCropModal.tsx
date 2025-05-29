@@ -2,6 +2,9 @@ import React from 'react'
 import { Modal } from '../../../components/Modal'
 import { useForm } from 'react-hook-form'
 import { axiosInstance } from '../../../utils';
+import { Input } from '../../../components/Input';
+import { InputRadio } from '../../../components/InputRadio';
+import { Button } from '../../../components/Button';
 
 
 interface AddNewCropModalProps {
@@ -12,11 +15,12 @@ interface AddNewCropModalProps {
 export function AddNewCropModal({setShowAddCropModal,setCrops}:AddNewCropModalProps) {
   const addNewCropForm = useForm();
   const partnershipType = addNewCropForm.watch('partnershipType');
+  const isSavingData = addNewCropForm.watch('isSavingData');
 
 
   const handleSubmit = async (data:any) => {
         try {
-            
+            addNewCropForm.setValue("isSavingData",true);
             const response = await axiosInstance.post(`/crops`,data);
 
             if(response?.data?.crop){
@@ -26,67 +30,56 @@ export function AddNewCropModal({setShowAddCropModal,setCrops}:AddNewCropModalPr
                     }
                     return [response.data.crop,...p]
                 });
+                addNewCropForm.setValue("isSavingData",false);
+                setShowAddCropModal(false);
             }
 
         } catch (error) {
             console.log(error);
+            addNewCropForm.setValue("isSavingData",false);
         }
   }
 
   return (
     <Modal title='Add New Crop' onClose={()=>{setShowAddCropModal(false)}}>
         <form className='flex flex-col gap-2 max-w-full w-[500px]'>
-            <input {...addNewCropForm.register('title')} className='border p-2 rounded-md' placeholder='Crop title...'/>
-            <input {...addNewCropForm.register('description')} className='border p-2 rounded-md' placeholder='Crop Desc...'/>
-            <input {...addNewCropForm.register('yourName')} className='border p-2 rounded-md' placeholder='Your Name...'/>
-            <input {...addNewCropForm.register('cropName')} className='border p-2 rounded-md' placeholder='Crop Name...'/>
-            <input {...addNewCropForm.register('startDate')} className='border p-2 rounded-md' type="datetime-local"/>
-            <input {...addNewCropForm.register('endDate')} className='border p-2 rounded-md' type="datetime-local"/>
+            <Input required label='Title*' placeholder='title' type='text' formHandler={addNewCropForm} fieldName='title'/>
+            <Input required label='Description*' placeholder='description' type='text' formHandler={addNewCropForm} fieldName='description'/>
+            <Input required label='Your Name*' placeholder='yourName' type='text' formHandler={addNewCropForm} fieldName='yourName'/>
+            <Input required label='Crop Name*' placeholder='cropName' type='text' formHandler={addNewCropForm} fieldName='cropName'/>
+            <Input required label='Start Date*' placeholder='startDate' type="datetime-local" formHandler={addNewCropForm} fieldName='startDate'/>
+            <Input label='End Date*' placeholder='endDate' type='datetime-local' formHandler={addNewCropForm} fieldName='endDate'/>
             
-            <PartnershipSelector register={addNewCropForm.register} fieldName='partnershipType'/>
+            <InputRadio 
+              label={"Are you farming solo or with a partner?"} 
+              formHandler={addNewCropForm} 
+              fieldName='partnershipType'
+              options={[
+                {
+                  label: "solo",
+                  value: "solo",
+                },
+                {
+                  label: "partnered",
+                  value: "partnered",
+                }
+              ]}
+            />
             
             {
-                partnershipType === "partnered" && <input {...addNewCropForm.register('partnerName',{required: partnershipType === "partnered" ? 'Partner name is required' : false})} className='border p-2 rounded-md' placeholder='Partner Name...'/>
+                partnershipType === "partnered" && <>
+                <Input required label='Partner Name*' placeholder='partnerName' type='text' formHandler={addNewCropForm} fieldName='partnerName'/>
+                </>
             }
             
+            <div className='h-4'/>
 
-            <button onClick={addNewCropForm.handleSubmit((data) => handleSubmit(data))} className='mt-6 bg-blue-600 text-white p-2 rounded-md'>Add New Crop</button>
+            <Button disabled={isSavingData? true:false} onClick={addNewCropForm.handleSubmit((data) => handleSubmit(data))}>
+                {isSavingData? "Saving Data..":"Add New Crop"}
+            </Button>
         </form>
     </Modal>
   )
 }
 
 
-
-interface PartnershipSelectorProps {
-  register: any;
-  fieldName: string;
-}
-
-
-const PartnershipSelector: React.FC<PartnershipSelectorProps> = ({ register, fieldName }) => {
-  return (
-    <div className="">
-      <h2 className="text-sm  mb-2">Are you farming solo or with a partner?</h2>
-      <div className="flex gap-4">
-        <label className="flex items-center space-x-2">
-          <input
-            type="radio"
-            value="solo"
-            {...register(fieldName,{required: true})}
-          />
-          <span>Solo</span>
-        </label>
-
-        <label className="flex items-center space-x-2">
-          <input
-            type="radio"
-            value="partnered"
-            {...register(fieldName,{required: true})}
-          />
-          <span>Partnered</span>
-        </label>
-      </div>
-    </div>
-  );
-};

@@ -13,6 +13,7 @@ interface TakenMoney {
   date: Date;
   purpose: string;
   note: string;
+  paymentMode: "online" | "offline";
 }
 
 interface Sale {
@@ -58,6 +59,7 @@ const TakenMoneySchema = new Schema<TakenMoney>({
   date: { type: Date, required: true },
   purpose: { type: String, required: true },
   note: { type: String, default: "" },
+  paymentMode: { type: String, enum: ["online", "offline"], required: true },
 });
 
 const SaleSchema = new Schema<Sale>({
