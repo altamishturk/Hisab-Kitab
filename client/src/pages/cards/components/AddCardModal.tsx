@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Modal } from './Modal'
+import { Modal } from '../../../components/Modal'
 import { useForm } from 'react-hook-form';
 import { axiosInstance } from '../../../utils/axiosInstance';
 

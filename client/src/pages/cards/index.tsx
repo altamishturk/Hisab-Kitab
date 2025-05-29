@@ -9,7 +9,7 @@ import { EditCardModal } from './components/EditCardModal';
 
 
 
-export function Card() {
+export function Cards() {
     const {
         cards,
         setCards,
@@ -29,7 +29,7 @@ export function Card() {
 
     return <Section >
         <div className="flex flex-col gap-4">
-            <div className="bg-gray-200 flex justify-between gap-2 md:gap-5 sticky pt-[16px] top-[57px] z-[100] border-b border-b-gray-300 pb-3 md:pb-5 border-dotted border-b-4">
+            <div className="bg-gray-200 flex justify-between gap-2 md:gap-5 sticky pt-[16px] top-[57px] z-[10] border-b border-b-gray-300 pb-3 md:pb-5 border-dotted border-b-4">
                 <svg 
                     xmlns="http://www.w3.org/2000/svg" 
                     fill="none" 
