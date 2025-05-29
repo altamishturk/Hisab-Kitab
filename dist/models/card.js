@@ -40,6 +40,7 @@ const EntrySchema = new mongoose_1.Schema({
     },
     user: {
         type: mongoose_1.Schema.Types.ObjectId,
+        ref: "user",
         required: true
     }
 }, { timestamps: true });

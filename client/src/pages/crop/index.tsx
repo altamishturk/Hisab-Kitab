@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
 import { axiosInstance } from '../../utils';
-import { PlusSVG } from '../../components/SVGs/PlusSVG';
 import { useForm} from 'react-hook-form';
 import { useParams } from 'react-router';
 import Section from '../../components/Section';
 import { AddYourExpenseOrSaleFormModal } from './components/AddYourExpenseOrSaleFormModal';
+import { AddButton } from './components/AddButton';
 
 
 
@@ -109,7 +109,14 @@ export function Crop() {
                   cropData && <>
                       {
                           cropData.partnershipType === "solo" && <>
-                              <h2 className='text-center font-bold text-gray-600'>{cropData.cropName}</h2>
+                              <div className="bg-white p-6 rounded-xl space-y-4">
+                                    <h2 className="text-xl font-semibold text-gray-700">📌 {cropData.title}</h2>
+                                    <div className="text-gray-600">
+                                        <p><span className="font-medium">Crop Name:</span> {cropData.cropName}</p>
+                                        <p><span className="font-medium">Description:</span> {cropData.description}</p>
+                                        <p><span className="font-medium">Partners:</span> No</p>
+                                    </div>
+                              </div>
 
                               <table className="w-full text-sm text-left rtl:text-right text-gray-500 mt-5 md:mt-10">
                                   <thead className="text-xs text-gray-700 uppercase bg-gray-50">
@@ -160,16 +167,10 @@ export function Crop() {
                                       
                                       <tr className="bg-white border-b border-gray-200">
                                           <th className="px-6 py-4">
-                                              <button onClick={()=>{addExpanseForm.setValue("showAddExpanse",true)}} className='flex items-center gap-1 border p-2 rounded-md'>
-                                                  <PlusSVG className='size-4 border rounded-full'/>
-                                                  Add New Expense 
-                                              </button> 
+                                              <AddButton label='Add New Expense' onClick={()=>{addExpanseForm.setValue("showAddExpanse",true)}}/>
                                           </th>
                                           <td className="px-6 py-4">
-                                              <button onClick={()=>{addSalesForm.setValue("showAddSales",true)}} className='flex items-center gap-1 border p-2 rounded-md'>
-                                                  <PlusSVG className='size-4 border rounded-full'/>
-                                                  Add New Sale 
-                                              </button> 
+                                              <AddButton label='Add New Sale' onClick={()=>{addSalesForm.setValue("showAddSales",true)}}/>
                                           </td>
                                           <td className="px-6 py-4">
                                               
@@ -181,7 +182,94 @@ export function Crop() {
                       }
                       {
                           cropData.partnershipType === "partnered" && <>
-                          
+                               <div className="bg-white p-6 rounded-xl space-y-4">
+                                    <h2 className="text-xl font-semibold text-gray-700">📌 {cropData.title}</h2>
+                                    <div className="text-gray-600">
+                                        <p><span className="font-medium">Crop Name:</span> {cropData.cropName}</p>
+                                        <p><span className="font-medium">Description:</span> {cropData.description}</p>
+                                        <p><span className="font-medium">Partners:</span> {cropData.yourName} & {cropData.partnerName}</p>
+                                    </div>
+                                </div>
+
+
+                               <table className="w-full text-sm text-left rtl:text-right text-gray-500 mt-5 md:mt-10">
+                                  <thead className="text-xs text-gray-700 uppercase bg-gray-50">
+                                      <tr>
+                                          <th scope="col" className="px-6 py-3">
+                                              your Expenses
+                                          </th>
+                                          <th scope="col" className="px-6 py-3">
+                                              partner Expenses
+                                          </th>
+                                          <th scope="col" className="px-6 py-3">
+                                              your Taken Money
+                                          </th>
+                                          <th scope="col" className="px-6 py-3">
+                                              partner Taken Money
+                                          </th>
+                                          <th scope="col" className="px-6 py-3">
+                                              Sales
+                                          </th>
+                                          <th scope="col" className="px-6 py-3">
+                                              Profit
+                                          </th>
+                                      </tr>
+                                  </thead>
+                                  <tbody>
+                                        {
+                                            new Array(Math.max(cropData.yourExpenses.length,cropData.sales.length))
+                                            .fill(1).map((itme:any,idx) => {
+                                                const [yourExpense,yourExpenseSum] = getdata(cropData.yourExpenses,idx);
+                                                const [sale,saleSum] = getdata(cropData.sales,idx);
+
+                                                return <>
+                                                    <tr className="bg-white border-b border-gray-200">
+                                                        <th className="px-6 py-4">
+                                                            {
+                                                                !yourExpense && <>NA</>
+                                                            }
+                                                            {
+                                                                yourExpense && <>{yourExpense?.date} | {yourExpense?.amount} | {yourExpense?.description}  | {yourExpense?.paymentMode} | {yourExpense?.note} </>
+                                                            }
+                                                        </th>
+                                                        <td className="px-6 py-4"></td>
+                                                        <td className="px-6 py-4"></td>
+                                                        <td className="px-6 py-4"></td>
+                                                        <td className="px-6 py-4">
+                                                            {
+                                                                !sale && <>NA</> 
+                                                            }
+                                                            {
+                                                                sale && <>{sale?.soldBy} | {sale?.soldTo} | {sale?.date} | {sale?.amount} | {sale?.description} | {sale?.paymentMode} | {sale?.note}</>
+                                                            }
+                                                        </td>
+                                                        <td className="px-6 py-4">
+                                                            ₹ {saleSum-yourExpenseSum} 
+                                                        </td>
+                                                    </tr>
+                                                </>
+                                            })
+                                        }
+                                        <tr className="bg-white border-b border-gray-200">
+                                            <th className="px-6 py-4">
+                                              <AddButton label='Add Your New Expense' onClick={()=>{addExpanseForm.setValue("showAddExpanse",true)}}/>
+                                            </th>
+                                            <td className="px-6 py-4">
+                                              <AddButton label='Add partner Expense' onClick={()=>{}}/>
+                                            </td>
+                                            <td className="px-6 py-4">
+                                              <AddButton label='Add your money token' onClick={()=>{}}/>
+                                            </td>
+                                            <td className="px-6 py-4">
+                                              <AddButton label='Add partner money token' onClick={()=>{}}/>
+                                            </td>
+                                            <td className="px-6 py-4">
+                                              <AddButton label='Add New Sale' onClick={()=>{addSalesForm.setValue("showAddSales",true)}}/>
+                                            </td>
+                                            <td className="px-6 py-4"></td>
+                                        </tr>
+                                  </tbody>
+                              </table>
                           </>
                       }
                   </>
@@ -210,6 +298,8 @@ export function Crop() {
         </Section>
   )
 }
+
+
 
 
 
