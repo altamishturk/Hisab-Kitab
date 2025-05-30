@@ -42,11 +42,11 @@ const getCropById = async (req, res) => {
 exports.getCropById = getCropById;
 const updateCrop = async (req, res) => {
     try {
-        const updatedCrop = await crop_1.Crop.findByIdAndUpdate(req.params.cropId, req.body, { new: true, runValidators: true });
-        if (!updatedCrop) {
+        const crop = await crop_1.Crop.findByIdAndUpdate(req.params.cropId, req.body, { new: true, runValidators: true });
+        if (!crop) {
             throw new Error("Crop not found");
         }
-        res.status(200).json(updatedCrop);
+        res.status(200).json({ crop });
     }
     catch (error) {
         res.status(500).json({ message: "Error updating crop", error });

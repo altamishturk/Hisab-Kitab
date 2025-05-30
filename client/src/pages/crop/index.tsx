@@ -6,6 +6,8 @@ import Section from '../../components/Section';
 import { AddYourExpenseOrSaleFormModal } from './components/AddYourExpenseOrSaleFormModal';
 import { AddButton } from './components/AddButton';
 import { sumByKey } from '../../utils/sumByKey';
+import dayjs from 'dayjs';
+import { PacmanLoader } from "react-spinners";
 
 
 
@@ -144,17 +146,15 @@ export function Crop() {
         <Section>
           <div className='pt-5 md:pt-10'>
               {
-                  isLoading && <>
-                      Loading Data..
-                  </>
-              }
-              {
-                <div className="bg-white p-6 rounded-xl mb-2">
-                    <NavLink to={"/crops"}>{"<"} Back</NavLink>
-                </div>
+                  isLoading && <div className='w-full h-[90vh] flex justify-center items-center'>
+                      <PacmanLoader size={50} />
+                  </div>
               }
               {
                   cropData && <>
+                       <div className="bg-white p-6 rounded-xl mb-2">
+                           <NavLink to={"/crops"}>{"<"} Back</NavLink>
+                       </div>
                       {
                           cropData.partnershipType === "solo" && <>
                               <div className="bg-white p-6 rounded-xl space-y-4">
@@ -169,57 +169,34 @@ export function Crop() {
                                     </div>
                               </div>
 
-                              <table className="w-full text-sm text-left rtl:text-right text-gray-500 mt-5 md:mt-10">
-                                  <thead className="text-xs text-gray-700 uppercase bg-gray-50">
-                                      <tr>
-                                          <th scope="col" className="px-6 py-3">
-                                              Expenses
-                                          </th>
-                                          <th scope="col" className="px-6 py-3">
-                                              Sales
-                                          </th>
-                                      </tr>
-                                  </thead>
-                                  <tbody>
-                                      {
-                                          new Array(Math.max(cropData.yourExpenses.length,cropData.sales.length))
-                                          .fill(1).map((itme:any,idx) => {
-                                              const expense = cropData.yourExpenses[idx];
-                                              const sale = cropData.sales[idx];
+                              <div className="bg-white shadow-md rounded-xl p-4 border border-gray-100 mt-2">
+                                    <h3 className="text-lg font-semibold text-gray-800 mb-2">Your Expense</h3>
+                                    {cropData.yourExpenses.map((item: any, idx: number) => (
+                                        <div key={idx} className="flex flex-wrap gap-2 mb-2">
+                                            <span className='bg-gray-400 w-[30px] rounded-md text-white flex justify-center items-center'>#{idx+1}</span>
+                                            <span>₹{item.amount || 'NA'},</span>
+                                            <span>{dayjs(item.date).format("MMM D, YYYY h:mm A")},</span>
+                                            <span>{item.description || 'NA'},</span>
+                                            <span>{item.note || 'NA'},</span>
+                                            <span>{item.paymentMode || 'NA'}</span>
+                                        </div>
+                                    ))}
+                                    <AddButton label='New Entry' onClick={()=>{addExpanseForm.setValue("showAddExpanse",true)}}/>
 
-                                              return <>
-                                                  <tr key={idx} className="bg-white border-b border-gray-200">
-                                                      <th className="px-6 py-4 font-normal">
-                                                          {
-                                                            !expense && <>NA</>
-                                                          }
-                                                          {
-                                                            expense && <>{expense?.date} | {expense?.amount} | {expense?.description}  | {expense?.paymentMode} | {expense?.note} </>
-                                                          }
-                                                      </th>
-                                                      <td className="px-6 py-4">
-                                                          {
-                                                            !sale && <>NA</> 
-                                                          }
-                                                          {
-                                                            sale && <>{sale?.soldBy} | {sale?.soldTo} | {sale?.date} | {sale?.amount} | {sale?.description} | {sale?.paymentMode} | {sale?.note}</>
-                                                          }
-                                                      </td>
-                                                  </tr>
-                                              </>
-                                          })
-                                      }
-                                      
-                                      <tr className="bg-white border-b border-gray-200">
-                                          <th className="px-6 py-4 font-normal">
-                                              <AddButton label='Add New Expense' onClick={()=>{addExpanseForm.setValue("showAddExpanse",true)}}/>
-                                          </th>
-                                          <td className="px-6 py-4">
-                                              <AddButton label='Add New Sale' onClick={()=>{addSalesForm.setValue("showAddSales",true)}}/>
-                                          </td>
-                                      </tr>
-                                  </tbody>
-                              </table>
+                                    <h3 className="text-lg font-semibold text-gray-800 mb-2 mt-4">Sales</h3>
+                                    {cropData.sales.map((item: any, idx: number) => (
+                                        <div key={idx} className="flex flex-wrap gap-2 mb-2">
+                                            <span className='bg-gray-400 w-[30px] rounded-md text-white flex justify-center items-center'>#{idx+1}</span>
+                                            <span>₹{item.amount || 'NA'},</span>
+                                            <span>{dayjs(item.date).format("MMM D, YYYY h:mm A")},</span>
+                                            <span>{item.description || 'NA'},</span>
+                                            <span>{item.note || 'NA'},</span>
+                                            <span>{item.soldBy || 'NA'}</span>
+                                            <span>{item.soldTo || 'NA'}</span>
+                                        </div>
+                                    ))}
+                                    <AddButton label='New Entry' onClick={()=>{addSalesForm.setValue("showAddSales",true)}}/>
+                              </div>
                           </>
                       }
                       {
@@ -240,111 +217,73 @@ export function Crop() {
                                 </div>
 
 
+                              <div className="bg-white shadow-md rounded-xl p-4 border border-gray-100 mt-2">
+                                    <h3 className="text-lg font-semibold text-gray-800 mb-2">Your Expense</h3>
+                                    {cropData.yourExpenses.map((item: any, idx: number) => (
+                                        <div key={idx} className="flex flex-wrap gap-2 mb-2">
+                                            <span className='bg-gray-400 w-[30px] rounded-md text-white flex justify-center items-center'>#{idx+1}</span>
+                                            <span>₹{item.amount || 'NA'},</span>
+                                            <span>{dayjs(item.date).format("MMM D, YYYY h:mm A")},</span>
+                                            <span>{item.description || 'NA'},</span>
+                                            <span>{item.note || 'NA'},</span>
+                                            <span>{item.paymentMode || 'NA'}</span>
+                                        </div>
+                                    ))}
+                                    <AddButton label='New Entry' onClick={()=>{addExpanseForm.setValue("showAddExpanse",true)}}/>
 
+                                    <h3 className="text-lg font-semibold text-gray-800 mb-2 mt-4">Partner Expense</h3>
+                                    {cropData.partnerExpenses.map((item: any, idx: number) => (
+                                        <div key={idx} className="flex flex-wrap gap-2 mb-2">
+                                            <span className='bg-gray-400 w-[30px] rounded-md text-white flex justify-center items-center'>#{idx+1}</span>
+                                            <span>₹{item.amount || 'NA'},</span>
+                                            <span>{dayjs(item.date).format("MMM D, YYYY h:mm A")},</span>
+                                            <span>{item.description || 'NA'},</span>
+                                            <span>{item.note || 'NA'},</span>
+                                            <span>{item.paymentMode || 'NA'}</span>
+                                        </div>
+                                    ))}
+                                    <AddButton label='New Entry' onClick={()=>{addPartnerExpanseForm.setValue("showPartnerExpanse",true)}}/>
 
-                               <table className="w-full text-sm text-left rtl:text-right text-gray-500 mt-5 md:mt-10">
-                                  <thead className="text-xs text-gray-700 uppercase bg-gray-50">
-                                      <tr>
-                                          <th scope="col" className="px-6 py-3">
-                                              your Expenses
-                                          </th>
-                                          <th scope="col" className="px-6 py-3">
-                                              partner Expenses
-                                          </th>
-                                          <th scope="col" className="px-6 py-3">
-                                              your Taken Money
-                                          </th>
-                                          <th scope="col" className="px-6 py-3">
-                                              partner Taken Money
-                                          </th>
-                                          <th scope="col" className="px-6 py-3">
-                                              Sales
-                                          </th>
-                                      </tr>
-                                  </thead>
-                                  <tbody>
-                                        {
-                                            new Array(Math.max(
-                                                cropData.yourExpenses.length,
-                                                cropData.partnerExpenses.length,
-                                                cropData.yourTakenMoney.length,
-                                                cropData.partnerTakenMoney.length,
-                                                cropData.sales.length,
-                                            ))
-                                            .fill(1).map((itme:any,idx) => {
-                                                const yourExpense = cropData.yourExpenses[idx];
-                                                const partnerExpense = cropData.partnerExpenses[idx];
-                                                const yourTakenMoney = cropData.yourTakenMoney[idx];
-                                                const partnerTakenMoney = cropData.partnerTakenMoney[idx];
-                                                const sale = cropData.sales[idx];
+                                    <h3 className="text-lg font-semibold text-gray-800 mb-2 mt-4">Your Taken Monay</h3>
+                                    {cropData.yourTakenMoney.map((item: any, idx: number) => (
+                                        <div key={idx} className="flex flex-wrap gap-2 mb-2">
+                                            <span className='bg-gray-400 w-[30px] rounded-md text-white flex justify-center items-center'>#{idx+1}</span>
+                                            <span>₹{item.amount || 'NA'},</span>
+                                            <span>{dayjs(item.date).format("MMM D, YYYY h:mm A")},</span>
+                                            <span>{item.purpose || 'NA'},</span>
+                                            <span>{item.note || 'NA'},</span>
+                                            <span>{item.paymentMode || 'NA'}</span>
+                                        </div>
+                                    ))}
+                                    <AddButton label='New Entry' onClick={()=>{addMoneyTakenForm.setValue("showMoneyTaken",true)}}/>
 
-                                                return <>
-                                                    <tr key={idx} className="bg-white border-b border-gray-200">
-                                                        <th className="px-6 py-4 font-normal">
-                                                            {
-                                                                !yourExpense && <>NA</>
-                                                            }
-                                                            {
-                                                                yourExpense && <>{yourExpense?.date} | {yourExpense?.amount} | {yourExpense?.description}  | {yourExpense?.paymentMode} | {yourExpense?.note} </>
-                                                            }
-                                                        </th>
-                                                        <td className="px-6 py-4">
-                                                            {
-                                                                !partnerExpense && <>NA</>
-                                                            }
-                                                            {
-                                                                partnerExpense && <>{partnerExpense?.date} | {partnerExpense?.amount} | {partnerExpense?.description}  | {partnerExpense?.paymentMode} | {partnerExpense?.note} </>
-                                                            }
-                                                        </td>
-                                                        <td className="px-6 py-4">
-                                                            {
-                                                                !yourTakenMoney && <>NA</>
-                                                            }
-                                                            {
-                                                                yourTakenMoney && <>{yourTakenMoney?.amount} | {yourTakenMoney?.date} | {yourTakenMoney?.purpose}  | {yourTakenMoney?.note} | {yourTakenMoney?.paymentMode} </>
-                                                            }
-                                                        </td>
-                                                        <td className="px-6 py-4">
-                                                            {
-                                                                !partnerTakenMoney && <>NA</>
-                                                            }
-                                                            {
-                                                                partnerTakenMoney && <>{partnerTakenMoney?.amount} | {partnerTakenMoney?.date} | {partnerTakenMoney?.purpose}  | {partnerTakenMoney?.note} | {yourTakenMoney?.paymentMode}</>
-                                                            }
-                                                        </td>
-                                                        <td className="px-6 py-4">
-                                                            {
-                                                                !sale && <>NA</> 
-                                                            }
-                                                            {
-                                                                sale && <>{sale?.soldBy} | {sale?.soldTo} | {sale?.date} | {sale?.amount} | {sale?.description} | {sale?.paymentMode} | {sale?.note}</>
-                                                            }
-                                                        </td>
-                                                    </tr>
-                                                </>
-                                            })
-                                        }
+                                    <h3 className="text-lg font-semibold text-gray-800 mb-2 mt-4">Partner Taken Money</h3>
+                                    {cropData.partnerTakenMoney.map((item: any, idx: number) => (
+                                        <div key={idx} className="flex flex-wrap gap-2 mb-2">
+                                            <span className='bg-gray-400 w-[30px] rounded-md text-white flex justify-center items-center'>#{idx+1}</span>
+                                            <span>₹{item.amount || 'NA'},</span>
+                                            <span>{dayjs(item.date).format("MMM D, YYYY h:mm A")},</span>
+                                            <span>{item.purpose || 'NA'},</span>
+                                            <span>{item.note || 'NA'},</span>
+                                            <span>{item.paymentMode || 'NA'}</span>
+                                        </div>
+                                    ))}
+                                    <AddButton label='New Entry' onClick={()=>{addPartnerMoneyTakenForm.setValue("showPartnerMoneyTaken",true)}}/>
 
-                                        {/* action buttons  */}
-                                        <tr className="bg-white border-b border-gray-200">
-                                            <th className="px-6 py-4 font-normal">
-                                              <AddButton label='Add Your New Expense' onClick={()=>{addExpanseForm.setValue("showAddExpanse",true)}}/>
-                                            </th>
-                                            <td className="px-6 py-4">
-                                              <AddButton label='Add partner Expense' onClick={()=>{addPartnerExpanseForm.setValue("showPartnerExpanse",true)}}/>
-                                            </td>
-                                            <td className="px-6 py-4">
-                                              <AddButton label='Add your money token' onClick={()=>{addMoneyTakenForm.setValue("showMoneyTaken",true)}}/>
-                                            </td>
-                                            <td className="px-6 py-4">
-                                              <AddButton label='Add partner money token' onClick={()=>{addPartnerMoneyTakenForm.setValue("showPartnerMoneyTaken",true)}}/>
-                                            </td>
-                                            <td className="px-6 py-4">
-                                              <AddButton label='Add New Sale' onClick={()=>{addSalesForm.setValue("showAddSales",true)}}/>
-                                            </td>
-                                        </tr>
-                                  </tbody>
-                              </table>
+                                    <h3 className="text-lg font-semibold text-gray-800 mb-2 mt-4">Sales</h3>
+                                    {cropData.sales.map((item: any, idx: number) => (
+                                        <div key={idx} className="flex flex-wrap gap-2 mb-2">
+                                            <span className='bg-gray-400 w-[30px] rounded-md text-white flex justify-center items-center'>#{idx+1}</span>
+                                            <span>₹{item.amount || 'NA'},</span>
+                                            <span>{dayjs(item.date).format("MMM D, YYYY h:mm A")},</span>
+                                            <span>{item.description || 'NA'},</span>
+                                            <span>{item.note || 'NA'},</span>
+                                            <span>{item.soldBy || 'NA'}</span>
+                                            <span>{item.soldTo || 'NA'}</span>
+                                        </div>
+                                    ))}
+                                     <AddButton label='New Entry' onClick={()=>{addSalesForm.setValue("showAddSales",true)}}/>
+                              </div>
                           </>
                       }
                   </>

@@ -1,9 +1,10 @@
-import { useEffect, useState } from "react";
 import Section from "../../components/Section";
 import { PlusSVG } from "../../components/SVGs/PlusSVG";
 import { AddNewCropModal } from "./components/AddNewCropModal";
-import { axiosInstance } from "../../utils";
 import { CropItem } from "./components/CropItem";
+import { UpdateCropModal } from "./components/UpdateCropModal";
+import { useCropLogic } from "./hooks/useCropLogic";
+import {PacmanLoader} from "react-spinners"
 
 export function Crops() {
     const {
@@ -11,6 +12,9 @@ export function Crops() {
         setShowAddCropModal,
         crops,
         setCrops,
+        cropIdToUpdate,
+        setCropIdToUpdate,
+        isLoading
     } = useCropLogic();
    
 
@@ -26,47 +30,36 @@ export function Crops() {
                 {
                     showAddCropModal && <AddNewCropModal setShowAddCropModal={setShowAddCropModal} setCrops={setCrops}/>
                 }
+                {
+                    cropIdToUpdate && <UpdateCropModal cropIdToUpdate={cropIdToUpdate} setCropIdToUpdate={setCropIdToUpdate} setCrops={setCrops}/>
+                }
 
                 <div className="flex flex-wrap justify-center gap-2 md:gap-5 pt-5">
                     {
-                        crops?.map((crop:any,idx:number) => <CropItem key={idx} crop={crop}/>)
+                        !crops && isLoading && <div className="w-full h-[90vh] flex justify-center items-center"><PacmanLoader/></div>
                     }
+                    {crops?.map((crop: any, idx: number) => (
+                        <CropItem
+                        setCrops={setCrops}
+                        key={idx}
+                        crop={crop}
+                        setCropIdToUpdate={setCropIdToUpdate}
+                        />
+                    ))}
+
+                    {crops && crops.length === 0 && (
+                        <div className="w-full flex flex-col items-center justify-center mt-10 text-center text-gray-600">
+                        <img className="w-[200px] h-[110px] rounded-md max-w-full mb-2" src="https://www.harvestplus.org/wp-content/uploads/2021/10/Pakistan-homepage.jpg" alt="crop"/>
+                        <p className="text-lg font-medium">No crops found</p>
+                        <p className="text-sm text-gray-500 mt-1 mb-5">Start by adding your first crop entry.</p>
+                            <PlusSVG onClick={() =>{setShowAddCropModal(true)}} className="size-10 bg-white shadow-md p-2 rounded-md cursor-pointer"/>
+                        </div>
+                    )}
                 </div>
+
             </div>
         </Section>
     )
 }
 
 
-function useCropLogic(){
-    const [crops, setCrops] = useState<any>(null);
-    const [showAddCropModal, setShowAddCropModal] = useState<boolean>(false);
-    const [cropId, setCropId] = useState<string | null>(null);
-
-
-    useEffect(() => {
-        (async () => {
-            try {
-                
-                const response = await axiosInstance.get("/crops");
-
-                if(response?.data?.crops){
-                    setCrops(response?.data?.crops);
-                }
-
-            } catch (error) {
-                console.log(error);
-            }
-        })()
-
-    }, []);
-
-    return {
-        showAddCropModal,
-        setShowAddCropModal,
-        setCrops,
-        crops,
-        cropId,
-        setCropId
-    };
-}

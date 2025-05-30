@@ -17,7 +17,6 @@ export function AddNewCropModal({setShowAddCropModal,setCrops}:AddNewCropModalPr
   const partnershipType = addNewCropForm.watch('partnershipType');
   const isSavingData = addNewCropForm.watch('isSavingData');
 
-
   const handleSubmit = async (data:any) => {
         try {
             addNewCropForm.setValue("isSavingData",true);
