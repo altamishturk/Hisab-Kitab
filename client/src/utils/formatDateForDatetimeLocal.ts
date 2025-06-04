@@ -1,4 +1,8 @@
 export function formatDateForDatetimeLocal(date: Date): string {
+  if(isNaN(new Date(date).getTime())){
+    return "";
+  }
+
   const pad = (n: number): string => n.toString().padStart(2, '0');
 
   const year = date.getFullYear();

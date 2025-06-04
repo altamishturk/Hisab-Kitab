@@ -1,11 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteCrop = exports.addSale = exports.addPartnerTakenMoney = exports.addYourTakenMoney = exports.addPartnerExpense = exports.addYourExpense = exports.updateCrop = exports.getCropById = exports.getAllCrops = exports.createCrop = void 0;
+exports.deleteSales = exports.deletePartnerTakenMoney = exports.deleteYourTakenMoney = exports.deleteSharedExpenses = exports.deletePartnerExpense = exports.deleteYourExpense = exports.deleteCrop = exports.updateSales = exports.addSale = exports.updatePartnerTakenMoney = exports.addPartnerTakenMoney = exports.updateYourTakenMoney = exports.addYourTakenMoney = exports.updateSharedExpenses = exports.addSharedExpenses = exports.updatePartnerExpense = exports.addPartnerExpense = exports.updateYourExpense = exports.addYourExpense = exports.updateCrop = exports.getCropById = exports.getAllCrops = exports.createCrop = void 0;
 const crop_1 = require("../models/crop");
-// (async () => {
-//   const s = await Crop.find().populate("user");
-//   console.log(s);
-// })()
 const createCrop = async (req, res) => {
     try {
         const crop = await crop_1.Crop.create({ ...req.body, user: req.user._id });
@@ -69,6 +65,26 @@ const addYourExpense = async (req, res) => {
     }
 };
 exports.addYourExpense = addYourExpense;
+const updateYourExpense = async (req, res) => {
+    try {
+        const { cropId, expenseId } = req.params;
+        const updateData = req.body;
+        const crop = await crop_1.Crop.findOneAndUpdate({
+            _id: cropId,
+            "yourExpenses._id": expenseId,
+        }, {
+            $set: {
+                "yourExpenses.$": { _id: expenseId, ...updateData },
+            },
+        }, { new: true, runValidators: true });
+        res.status(200).json({ crop });
+    }
+    catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Error updating partner expense", error });
+    }
+};
+exports.updateYourExpense = updateYourExpense;
 const addPartnerExpense = async (req, res) => {
     try {
         const crop = await crop_1.Crop.findByIdAndUpdate(req.params.cropId, {
@@ -85,6 +101,62 @@ const addPartnerExpense = async (req, res) => {
     }
 };
 exports.addPartnerExpense = addPartnerExpense;
+const updatePartnerExpense = async (req, res) => {
+    try {
+        const { cropId, expenseId } = req.params;
+        const updateData = req.body;
+        const crop = await crop_1.Crop.findOneAndUpdate({
+            _id: cropId,
+            "partnerExpenses._id": expenseId,
+        }, {
+            $set: {
+                "partnerExpenses.$": { _id: expenseId, ...updateData },
+            },
+        }, { new: true, runValidators: true });
+        res.status(200).json({ crop });
+    }
+    catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Error updating partner expense", error });
+    }
+};
+exports.updatePartnerExpense = updatePartnerExpense;
+const addSharedExpenses = async (req, res) => {
+    try {
+        const crop = await crop_1.Crop.findByIdAndUpdate(req.params.cropId, {
+            $push: { sharedExpenses: req.body }
+        }, { new: true, runValidators: true });
+        if (!crop) {
+            throw new Error("Crop not found");
+        }
+        res.status(200).json({ crop });
+    }
+    catch (error) {
+        console.log(error);
+        res.status(500).json({ message: "Error updating crop", error });
+    }
+};
+exports.addSharedExpenses = addSharedExpenses;
+const updateSharedExpenses = async (req, res) => {
+    try {
+        const { cropId, expenseId } = req.params;
+        const updateData = req.body;
+        const crop = await crop_1.Crop.findOneAndUpdate({
+            _id: cropId,
+            "sharedExpenses._id": expenseId,
+        }, {
+            $set: {
+                "sharedExpenses.$": { _id: expenseId, ...updateData },
+            },
+        }, { new: true, runValidators: true });
+        res.status(200).json({ crop });
+    }
+    catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Error updating partner expense", error });
+    }
+};
+exports.updateSharedExpenses = updateSharedExpenses;
 const addYourTakenMoney = async (req, res) => {
     try {
         const crop = await crop_1.Crop.findByIdAndUpdate(req.params.cropId, {
@@ -101,6 +173,26 @@ const addYourTakenMoney = async (req, res) => {
     }
 };
 exports.addYourTakenMoney = addYourTakenMoney;
+const updateYourTakenMoney = async (req, res) => {
+    try {
+        const { cropId, expenseId } = req.params;
+        const updateData = req.body;
+        const crop = await crop_1.Crop.findOneAndUpdate({
+            _id: cropId,
+            "yourTakenMoney._id": expenseId,
+        }, {
+            $set: {
+                "yourTakenMoney.$": { _id: expenseId, ...updateData },
+            },
+        }, { new: true, runValidators: true });
+        res.status(200).json({ crop });
+    }
+    catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Error updating partner expense", error });
+    }
+};
+exports.updateYourTakenMoney = updateYourTakenMoney;
 const addPartnerTakenMoney = async (req, res) => {
     try {
         const crop = await crop_1.Crop.findByIdAndUpdate(req.params.cropId, {
@@ -117,6 +209,26 @@ const addPartnerTakenMoney = async (req, res) => {
     }
 };
 exports.addPartnerTakenMoney = addPartnerTakenMoney;
+const updatePartnerTakenMoney = async (req, res) => {
+    try {
+        const { cropId, expenseId } = req.params;
+        const updateData = req.body;
+        const crop = await crop_1.Crop.findOneAndUpdate({
+            _id: cropId,
+            "partnerTakenMoney._id": expenseId,
+        }, {
+            $set: {
+                "partnerTakenMoney.$": { _id: expenseId, ...updateData },
+            },
+        }, { new: true, runValidators: true });
+        res.status(200).json({ crop });
+    }
+    catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Error updating partner expense", error });
+    }
+};
+exports.updatePartnerTakenMoney = updatePartnerTakenMoney;
 const addSale = async (req, res) => {
     try {
         const crop = await crop_1.Crop.findByIdAndUpdate(req.params.cropId, {
@@ -133,6 +245,26 @@ const addSale = async (req, res) => {
     }
 };
 exports.addSale = addSale;
+const updateSales = async (req, res) => {
+    try {
+        const { cropId, expenseId } = req.params;
+        const updateData = req.body;
+        const crop = await crop_1.Crop.findOneAndUpdate({
+            _id: cropId,
+            "sales._id": expenseId,
+        }, {
+            $set: {
+                "sales.$": { _id: expenseId, ...updateData },
+            },
+        }, { new: true, runValidators: true });
+        res.status(200).json({ crop });
+    }
+    catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Error updating partner expense", error });
+    }
+};
+exports.updateSales = updateSales;
 const deleteCrop = async (req, res) => {
     try {
         const deletedCrop = await crop_1.Crop.findByIdAndDelete(req.params.cropId);
@@ -146,3 +278,99 @@ const deleteCrop = async (req, res) => {
     }
 };
 exports.deleteCrop = deleteCrop;
+const deleteYourExpense = async (req, res) => {
+    try {
+        const { cropId, expenseId } = req.params;
+        const crop = await crop_1.Crop.findOneAndUpdate({ _id: cropId }, {
+            $pull: {
+                yourExpenses: { _id: expenseId },
+            },
+        }, { new: true });
+        res.status(200).json({ crop });
+    }
+    catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Error updating partner expense", error });
+    }
+};
+exports.deleteYourExpense = deleteYourExpense;
+const deletePartnerExpense = async (req, res) => {
+    try {
+        const { cropId, expenseId } = req.params;
+        const crop = await crop_1.Crop.findOneAndUpdate({ _id: cropId }, {
+            $pull: {
+                partnerExpenses: { _id: expenseId },
+            },
+        }, { new: true, runValidators: true });
+        res.status(200).json({ crop });
+    }
+    catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Error updating partner expense", error });
+    }
+};
+exports.deletePartnerExpense = deletePartnerExpense;
+const deleteSharedExpenses = async (req, res) => {
+    try {
+        const { cropId, expenseId } = req.params;
+        const crop = await crop_1.Crop.findOneAndUpdate({ _id: cropId }, {
+            $pull: {
+                sharedExpenses: { _id: expenseId },
+            },
+        }, { new: true, runValidators: true });
+        res.status(200).json({ crop });
+    }
+    catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Error updating partner expense", error });
+    }
+};
+exports.deleteSharedExpenses = deleteSharedExpenses;
+const deleteYourTakenMoney = async (req, res) => {
+    try {
+        const { cropId, expenseId } = req.params;
+        const crop = await crop_1.Crop.findOneAndUpdate({ _id: cropId }, {
+            $pull: {
+                yourTakenMoney: { _id: expenseId },
+            },
+        }, { new: true, runValidators: true });
+        res.status(200).json({ crop });
+    }
+    catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Error updating partner expense", error });
+    }
+};
+exports.deleteYourTakenMoney = deleteYourTakenMoney;
+const deletePartnerTakenMoney = async (req, res) => {
+    try {
+        const { cropId, expenseId } = req.params;
+        const crop = await crop_1.Crop.findOneAndUpdate({ _id: cropId }, {
+            $pull: {
+                partnerTakenMoney: { _id: expenseId },
+            },
+        }, { new: true, runValidators: true });
+        res.status(200).json({ crop });
+    }
+    catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Error updating partner expense", error });
+    }
+};
+exports.deletePartnerTakenMoney = deletePartnerTakenMoney;
+const deleteSales = async (req, res) => {
+    try {
+        const { cropId, expenseId } = req.params;
+        const crop = await crop_1.Crop.findOneAndUpdate({ _id: cropId }, {
+            $pull: {
+                sales: { _id: expenseId },
+            },
+        }, { new: true, runValidators: true });
+        res.status(200).json({ crop });
+    }
+    catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Error updating partner expense", error });
+    }
+};
+exports.deleteSales = deleteSales;

@@ -4,7 +4,6 @@ import { AddNewCropModal } from "./components/AddNewCropModal";
 import { CropItem } from "./components/CropItem";
 import { UpdateCropModal } from "./components/UpdateCropModal";
 import { useCropLogic } from "./hooks/useCropLogic";
-import {PacmanLoader} from "react-spinners"
 
 export function Crops() {
     const {
@@ -36,7 +35,7 @@ export function Crops() {
 
                 <div className="flex flex-wrap justify-center gap-2 md:gap-5 pt-5">
                     {
-                        !crops && isLoading && <div className="w-full h-[90vh] flex justify-center items-center"><PacmanLoader/></div>
+                        !crops && isLoading && <div className="w-full flex justify-center items-center">Loading Data..</div>
                     }
                     {crops?.map((crop: any, idx: number) => (
                         <CropItem

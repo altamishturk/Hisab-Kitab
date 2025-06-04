@@ -29,7 +29,7 @@ export function UpdateCropModal({cropIdToUpdate,setCropIdToUpdate,setCrops}:AddN
                     if(!p){
                         return [response.data.crop]
                     }
-                    return [response.data.crop,...p]
+                    return p.map((prev:any) => prev._id === response.data.crop._id? response.data.crop:prev)
                 });
                 updateCropForm.setValue("isSavingData",false);
                 setCropIdToUpdate(null);

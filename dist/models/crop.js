@@ -39,15 +39,23 @@ const ExpenseSchema = new mongoose_1.Schema({
     amount: { type: Number, required: true },
     description: { type: String, default: "" },
     note: { type: String, default: "" },
-    paymentMode: { type: String, enum: ["online", "offline"], required: true },
+    paymentMode: { type: String, enum: ["online", "offline"], required: true, default: "offline" },
     date: { type: Date, required: true },
+});
+const SharedExpenseSchema = new mongoose_1.Schema({
+    amount: { type: Number, required: true },
+    description: { type: String, default: "" },
+    note: { type: String, default: "" },
+    paymentMode: { type: String, enum: ["online", "offline"], required: true, default: "offline" },
+    date: { type: Date, required: true },
+    initialPayer: { type: String, enum: ["you", "partner"], required: true }
 });
 const TakenMoneySchema = new mongoose_1.Schema({
     amount: { type: Number, required: true },
     date: { type: Date, required: true },
-    purpose: { type: String, required: true },
+    description: { type: String },
     note: { type: String, default: "" },
-    paymentMode: { type: String, enum: ["online", "offline"], required: true },
+    paymentMode: { type: String, enum: ["online", "offline"], required: true, default: "offline" },
 });
 const SaleSchema = new mongoose_1.Schema({
     amount: { type: Number, required: true },
@@ -55,8 +63,9 @@ const SaleSchema = new mongoose_1.Schema({
     soldBy: { type: String, required: true },
     description: { type: String, required: true },
     note: { type: String, default: "" },
-    paymentMode: { type: String, enum: ["online", "offline"], required: true },
+    paymentMode: { type: String, enum: ["online", "offline"], required: true, default: "offline" },
     date: { type: Date, required: true },
+    cashHolder: { type: String, enum: ["you", "partner"], required: true }
 });
 const CropSchema = new mongoose_1.Schema({
     title: { type: String, required: true },
@@ -73,6 +82,7 @@ const CropSchema = new mongoose_1.Schema({
     },
     partnerExpenses: { type: [ExpenseSchema], default: [] },
     yourExpenses: { type: [ExpenseSchema], default: [] },
+    sharedExpenses: { type: [SharedExpenseSchema], default: [] },
     yourTakenMoney: { type: [TakenMoneySchema], default: [] },
     partnerTakenMoney: { type: [TakenMoneySchema], default: [] },
     sales: { type: [SaleSchema], default: [] },
