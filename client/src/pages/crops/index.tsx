@@ -4,6 +4,7 @@ import { AddNewCropModal } from "./components/AddNewCropModal";
 import { CropItem } from "./components/CropItem";
 import { UpdateCropModal } from "./components/UpdateCropModal";
 import { useCropLogic } from "./hooks/useCropLogic";
+import Skeleton from 'react-loading-skeleton'
 
 export function Crops() {
     const {
@@ -17,7 +18,16 @@ export function Crops() {
     } = useCropLogic();
    
 
-    
+    // if(isLoading){
+    //     return <>
+    //         <div className="w-full h-[100vh] p-4">
+    //             <Skeleton
+    //             //   className="bg-gray-400"
+    //             //   height="100%"
+    //             />
+    //         </div>
+    //     </>
+    // }
 
     return (
         <Section>
@@ -35,7 +45,9 @@ export function Crops() {
 
                 <div className="flex flex-wrap justify-center gap-2 md:gap-5 pt-5">
                     {
-                        !crops && isLoading && <div className="w-full flex justify-center items-center">Loading Data..</div>
+                        !crops && isLoading && <div className="w-full flex justify-center items-center">
+                            <Skeleton count={5} />
+                        </div>
                     }
                     {crops?.map((crop: any, idx: number) => (
                         <CropItem
