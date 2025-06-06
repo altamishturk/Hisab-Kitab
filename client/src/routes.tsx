@@ -14,7 +14,7 @@ const Layout = () => (
     <header className="bg-gray-200">
       <Navbar />
     </header>
-    <main className="p-4 pt-[57px] w-full min-h-[100vh] max-w-screen-xl mx-auto bg-gray-200">
+    <main className="px-1 p-4 pt-[57px] w-full min-h-[100vh] max-w-screen-xl mx-auto bg-gray-200">
       <Outlet />
     </main>
     <ToastContainer position="bottom-center"/>
