@@ -105,13 +105,13 @@ export function Crop() {
               }
               {
                   cropData && <>
-                       <div className="bg-white p-6 rounded-xl mb-2">
+                       <CardSection title=''>
                            <NavLink to={"/crops"}>{"<"} Back</NavLink>
-                       </div>
+                       </CardSection>
+                       
                       {
                           cropData.partnershipType === "solo" && <>
-                              <div className="bg-white p-6 rounded-xl space-y-4">
-                                    <h2 className="text-xl font-semibold text-gray-700">📌 {cropData.title}</h2>
+                              <CardSection title={`📌 ${cropData.title}`}>
                                     <div className="text-gray-600">
                                         <p><span className="font-medium">Crop Name:</span> {cropData.cropName}</p>
                                         <p><span className="font-medium">Description:</span> {cropData.description}</p>
@@ -120,48 +120,42 @@ export function Crop() {
                                         <p><span className="font-medium">Sales:</span> {sumByKey(cropData.sales,"amount")}</p>
                                         <p><span className="font-medium">Total Profit:</span> {sumByKey(cropData.sales,"amount")-sumByKey(cropData.yourExpenses,"amount")}</p>
                                     </div>
-                              </div>
-
-                              <div className="bg-white shadow-md rounded-xl p-4 border border-gray-100 mt-2">
-                                    <h3 className="text-lg font-semibold text-gray-800 mb-2">Your Expense</h3>
-                                    {cropData.yourExpenses.map((item: any, idx: number) => (
-                                        <div key={idx} className="flex flex-col border-b pb-2 gap-2 mb-2">
-                                            <span className='bg-gray-400 w-[30px] rounded-md text-white flex justify-center items-center'>#{idx+1}</span>
-                                            <span>₹{item.amount || 'NA'}</span>
-                                            <span>{item.description || 'NA'}</span>
-                                            <span>{dayjs(item.date).format("MMM D, YYYY h:mm A")}</span>
-                                            <div className="flex gap-2">
-                                                <EditSVG onClick={()=> {setEditItem({itemId: item._id,itemType: "yourExpenses"})}}/>
-                                                <DeleteSVG onClick={()=> {setDeleteItem({itemId: item._id,itemType: "yourExpenses"})}}/>
-                                            </div>
-                                        </div>
-                                    ))}
+                              </CardSection>
+                              <CardSection title='Your Expense'>
+                                    {
+                                        cropData.yourExpenses.map((item: any, idx: number) => (
+                                            <Card 
+                                                serialNumber={idx+1} 
+                                                date={new Date(item.date)} 
+                                                description={item.description} 
+                                                amount={item.amount}
+                                                handleEdit={() => {setEditItem({itemId: item._id,itemType: "yourExpenses"})}}
+                                                handleDelete={() => {setDeleteItem({itemId: item._id,itemType: "yourExpenses"})}}
+                                            />
+                                        ))
+                                    }
                                     <AddButton label='New Entry' onClick={()=>{setAddItemType("yourExpenses")}}/>
-
-                                    <h3 className="text-lg font-semibold text-gray-800 mb-2 mt-4">Sales</h3>
-                                    {cropData.sales.map((item: any, idx: number) => (
-                                        <div key={idx} className="flex flex-col border-b pb-2 gap-2 mb-2">
-                                            <span className='bg-gray-400 w-[30px] rounded-md text-white flex justify-center items-center'>#{idx+1}</span>
-                                            <span>₹{item.amount || 'NA'}</span>
-                                            <span>{item.description || 'NA'}</span>
-                                            <span>Sold To - {item.soldTo || 'NA'}</span>
-                                            <span>Sold By - {item.soldBy || 'NA'}</span>
-                                            <span>Cash Holder - {item.cashHolder || 'NA'}</span>
-                                            <span>{dayjs(item.date).format("MMM D, YYYY h:mm A")}</span>
-                                            <div className="flex gap-2">
-                                                <EditSVG onClick={()=> {setEditItem({itemId: item._id,itemType: "sales"})}}/>
-                                                <DeleteSVG onClick={()=> {setDeleteItem({itemId: item._id,itemType: "sales"})}}/>
-                                            </div>
-                                        </div>
-                                    ))}
+                              </CardSection>
+                              <CardSection title='Sales'>
+                                    {
+                                        cropData.sales.map((item: any, idx: number) => (
+                                            <Card 
+                                                serialNumber={idx+1} 
+                                                date={new Date(item.date)} 
+                                                description={item.description} 
+                                                amount={item.amount}
+                                                handleEdit={() => {setEditItem({itemId: item._id,itemType: "sales"})}}
+                                                handleDelete={() => {setDeleteItem({itemId: item._id,itemType: "sales"})}}
+                                            />
+                                        ))
+                                    }
                                     <AddButton label='New Entry' onClick={()=>{setAddItemType("sales")}}/>
-                              </div>
+                              </CardSection>
                           </>
                       }
                       {
                           cropData.partnershipType === "partnered" && <>
-                               <div className="bg-white p-6 rounded-xl space-y-4">
-                                    <h2 className="text-xl font-semibold text-gray-700">📌 {cropData.title}</h2>
+                                <CardSection title={`📌 ${cropData.title}`}>
                                     <div className="text-gray-600">
                                         <p><span className="font-medium">Crop Name:</span> {cropData.cropName}</p>
                                         <p><span className="font-medium">Description:</span> {cropData.description}</p>
@@ -183,104 +177,97 @@ export function Crop() {
                                         <p><span className="font-medium">Sales:</span> {sales}</p>
                                         <p><span className="font-medium">Total Profit:</span> {sales-(yourExpenses+partnerExpenses+sharedExpenses)}</p>
                                     </div>
-                                </div>
-
-
-                              <div className="bg-white shadow-md rounded-xl p-4 border border-gray-100 mt-2">
-                                    <h3 className="text-lg font-semibold text-gray-800 mb-2">Your Expense</h3>
-                                    {cropData.yourExpenses.map((item: any, idx: number) => (
-                                        <div key={idx} style={{borderBottom: idx === cropData.yourExpenses.length-1? "none":""}} className="flex flex-col border-b pb-2 gap-2 mb-2">
-                                            <span className='bg-gray-400 w-[30px] rounded-md text-white flex justify-center items-center'>#{idx+1}</span>
-                                            <span >₹{item.amount || 'NA'}</span>
-                                            <span>{item.description || 'NA'}</span>
-                                            <span>{dayjs(item.date).format("MMM D, YYYY h:mm A")}</span>
-                                            <div className="flex gap-2">
-                                                <EditSVG onClick={()=> {setEditItem({itemId: item._id,itemType: "yourExpenses"})}}/>
-                                                <DeleteSVG onClick={()=> {setDeleteItem({itemId: item._id,itemType: "yourExpenses"})}}/>
-                                            </div>
-                                        </div>
-                                    ))}
+                                </CardSection>
+                                <CardSection title='Your Expense'>
+                                    {
+                                        cropData.yourExpenses.map((item: any, idx: number) => (
+                                            <Card 
+                                                serialNumber={idx+1} 
+                                                date={new Date(item.date)} 
+                                                description={item.description} 
+                                                amount={item.amount}
+                                                handleEdit={() => {setEditItem({itemId: item._id,itemType: "yourExpenses"})}}
+                                                handleDelete={() => {setDeleteItem({itemId: item._id,itemType: "yourExpenses"})}}
+                                            />
+                                        ))
+                                    }
                                     <AddButton label='New Entry' onClick={()=>{setAddItemType("yourExpenses")}}/>
-
-                                    <h3 className="text-lg font-semibold text-gray-800 mb-2 mt-4">Partner Expense</h3>
-                                    {cropData.partnerExpenses.map((item: any, idx: number) => (
-                                        <div key={idx} style={{borderBottom: idx === cropData.partnerExpenses.length-1? "none":""}} className="flex flex-col border-b pb-2 gap-2 mb-2">
-                                            <span className='bg-gray-400 w-[30px] rounded-md text-white flex justify-center items-center'>#{idx+1}</span>
-                                            <span>₹{item.amount || 'NA'}</span>
-                                            <span>{item.description || 'NA'}</span>
-                                            <span>{dayjs(item.date).format("MMM D, YYYY h:mm A")}</span>
-                                            <div className="flex gap-2">
-                                                <EditSVG onClick={()=> {setEditItem({itemId: item._id,itemType: "partnerExpenses"})}}/>
-                                                <DeleteSVG onClick={()=> {setDeleteItem({itemId: item._id,itemType: "partnerExpenses"})}}/>
-                                            </div>
-                                        </div>
-                                    ))}
+                                </CardSection>
+                                <CardSection title='Partner Expense'>
+                                    {
+                                        cropData.partnerExpenses.map((item: any, idx: number) => (
+                                            <Card 
+                                                serialNumber={idx+1} 
+                                                date={new Date(item.date)} 
+                                                description={item.description} 
+                                                amount={item.amount}
+                                                handleEdit={() => {setEditItem({itemId: item._id,itemType: "partnerExpenses"})}}
+                                                handleDelete={() => {setDeleteItem({itemId: item._id,itemType: "partnerExpenses"})}}
+                                            />
+                                        ))
+                                    }
                                     <AddButton label='New Entry' onClick={()=>{setAddItemType("partnerExpenses")}}/>
-                                    
-                                    <h3 className="text-lg font-semibold text-gray-800 mb-2 mt-4">Shared Expense</h3>
-                                    {cropData.sharedExpenses.map((item: any, idx: number) => (
-                                        <div key={idx} style={{borderBottom: idx === cropData.sharedExpenses.length-1? "none":""}} className="flex flex-col border-b pb-2 gap-2 mb-2">
-                                            <span className='bg-gray-400 w-[30px] rounded-md text-white flex justify-center items-center'>#{idx+1}</span>
-                                            <span>₹{item.amount || 'NA'}</span>
-                                            <span>{item.description || 'NA'}</span>
-                                            <span>{item.initialPayer || 'NA'}</span>
-                                            <span>{dayjs(item.date).format("MMM D, YYYY h:mm A")}</span>
-                                            <div className="flex gap-2">
-                                                <EditSVG onClick={()=> {setEditItem({itemId: item._id,itemType: "sharedExpenses"})}}/>
-                                                <DeleteSVG onClick={()=> {setDeleteItem({itemId: item._id,itemType: "sharedExpenses"})}}/>
-                                            </div>
-                                        </div>
-                                    ))}
+                                </CardSection>
+                                <CardSection title='Shared Expense'>
+                                    {
+                                        cropData.sharedExpenses.map((item: any, idx: number) => (
+                                            <Card 
+                                                serialNumber={idx+1} 
+                                                date={new Date(item.date)} 
+                                                description={item.description} 
+                                                amount={item.amount}
+                                                handleEdit={() => {setEditItem({itemId: item._id,itemType: "sharedExpenses"})}}
+                                                handleDelete={() => {setDeleteItem({itemId: item._id,itemType: "sharedExpenses"})}}
+                                            />
+                                        ))
+                                    }
                                     <AddButton label='New Entry' onClick={()=>{setAddItemType("sharedExpenses")}}/>
-
-                                    <h3 className="text-lg font-semibold text-gray-800 mb-2 mt-4">Your Taken Monay</h3>
-                                    {cropData.yourTakenMoney.map((item: any, idx: number) => (
-                                        <div key={idx} style={{borderBottom: idx === cropData.yourTakenMoney.length-1? "none":""}} className="flex flex-col border-b pb-2 gap-2 mb-2">
-                                            <span className='bg-gray-400 w-[30px] rounded-md text-white flex justify-center items-center'>#{idx+1}</span>
-                                            <span>₹{item.amount || 'NA'}</span>
-                                            <span>{item.description || 'NA'}</span>
-                                            <span>{dayjs(item.date).format("MMM D, YYYY h:mm A")}</span>
-                                            <div className="flex gap-2">
-                                                <EditSVG onClick={()=> {setEditItem({itemId: item._id,itemType: "yourTakenMoney"})}}/>
-                                                <DeleteSVG onClick={()=> {setDeleteItem({itemId: item._id,itemType: "yourTakenMoney"})}}/>
-                                            </div>
-                                        </div>
-                                    ))}
+                                </CardSection>
+                                <CardSection title='Your Taken Monay'>
+                                    {
+                                        cropData.yourTakenMoney.map((item: any, idx: number) => (
+                                            <Card 
+                                                serialNumber={idx+1} 
+                                                date={new Date(item.date)} 
+                                                description={item.description} 
+                                                amount={item.amount}
+                                                handleEdit={() => {setEditItem({itemId: item._id,itemType: "yourTakenMoney"})}}
+                                                handleDelete={() => {setDeleteItem({itemId: item._id,itemType: "yourTakenMoney"})}}
+                                            />
+                                        ))
+                                    }
                                     <AddButton label='New Entry' onClick={()=>{setAddItemType("yourTakenMoney")}}/>
-
-                                    <h3 className="text-lg font-semibold text-gray-800 mb-2 mt-4">Partner Taken Money</h3>
-                                    {cropData.partnerTakenMoney.map((item: any, idx: number) => (
-                                        <div key={idx} style={{borderBottom: idx === cropData.partnerTakenMoney.length-1? "none":""}} className="flex flex-col border-b pb-2 gap-2 mb-2">
-                                            <span className='bg-gray-400 w-[30px] rounded-md text-white flex justify-center items-center'>#{idx+1}</span>
-                                            <span>₹{item.amount || 'NA'}</span>
-                                            <span>{item.description || 'NA'}</span>
-                                            <span>{dayjs(item.date).format("MMM D, YYYY h:mm A")}</span>
-                                            <div className="flex gap-2">
-                                                <EditSVG onClick={()=> {setEditItem({itemId: item._id,itemType: "partnerTakenMoney"})}}/>
-                                                <DeleteSVG onClick={()=> {setDeleteItem({itemId: item._id,itemType: "partnerTakenMoney"})}}/>
-                                            </div>
-                                        </div>
-                                    ))}
+                                </CardSection>
+                                <CardSection title='Partner Taken Money'>
+                                    {
+                                        cropData.partnerTakenMoney.map((item: any, idx: number) => (
+                                            <Card 
+                                                serialNumber={idx+1} 
+                                                date={new Date(item.date)} 
+                                                description={item.description} 
+                                                amount={item.amount}
+                                                handleEdit={() => {setEditItem({itemId: item._id,itemType: "partnerTakenMoney"})}}
+                                                handleDelete={() => {setDeleteItem({itemId: item._id,itemType: "partnerTakenMoney"})}}
+                                            />
+                                        ))
+                                    }
                                     <AddButton label='New Entry' onClick={()=>{setAddItemType("partnerTakenMoney")}}/>
-
-                                    <h3 className="text-lg font-semibold text-gray-800 mb-2 mt-4">Sales</h3>
-                                    {cropData.sales.map((item: any, idx: number) => (
-                                        <div key={idx} style={{borderBottom: idx === cropData.sales.length-1? "none":""}} className="flex flex-col border-b pb-2 gap-2 mb-2">
-                                            <span className='bg-gray-400 w-[30px] rounded-md text-white flex justify-center items-center'>#{idx+1}</span>
-                                            <span>₹{item.amount || 'NA'}</span>
-                                            <span>{item.description || 'NA'}</span>
-                                            <span>Sold To - {item.soldTo || 'NA'}</span>
-                                            <span>Sold By - {item.soldBy || 'NA'}</span>
-                                            <span>Cash Holder - {item.cashHolder || 'NA'}</span>
-                                            <span>{dayjs(item.date).format("MMM D, YYYY h:mm A")}</span>
-                                            <div className="flex gap-2">
-                                                <EditSVG onClick={()=> {setEditItem({itemId: item._id,itemType: "sales"})}}/>
-                                                <DeleteSVG onClick={()=> {setDeleteItem({itemId: item._id,itemType: "sales"})}}/>
-                                            </div>
-                                        </div>
-                                    ))}
-                                     <AddButton label='New Entry' onClick={()=>{setAddItemType("sales")}}/>
-                              </div>
+                                </CardSection>
+                                <CardSection title='Sales'>
+                                    {
+                                        cropData.sales.map((item: any, idx: number) => (
+                                            <Card 
+                                                serialNumber={idx+1} 
+                                                date={new Date(item.date)} 
+                                                description={item.description} 
+                                                amount={item.amount}
+                                                handleEdit={() => {setEditItem({itemId: item._id,itemType: "sales"})}}
+                                                handleDelete={() => {setDeleteItem({itemId: item._id,itemType: "sales"})}}
+                                            />
+                                        ))
+                                    }
+                                    <AddButton label='New Entry' onClick={()=>{setAddItemType("sales")}}/>
+                                </CardSection>
                           </>
                       }
                   </>
@@ -303,6 +290,63 @@ export function Crop() {
           </div>
         </Section>
   )
+}
+
+
+
+interface CardSectionProps {
+    children: React.ReactNode,
+    title: string;
+}
+
+function CardSection({children,title}: CardSectionProps){
+
+
+    return <>
+        <div className="bg-gray-100 p-2 md:p-6 rounded-xl mb-2">
+            {
+                title && <h3 className="text-lg font-semibold text-gray-800 mb-2">{title}</h3>
+            }
+            {children}
+        </div>
+    </>
+}
+
+
+interface CardProps {
+    serialNumber: number;
+    date: Date;
+    description: string;
+    amount: number;
+    handleEdit: () => void;
+    handleDelete: () => void;
+}
+
+function Card({handleEdit,handleDelete,serialNumber,date,description,amount}:CardProps){
+
+
+    return <>
+            <div className="mb-2 flex rounded-md bg-white shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.1),0px_1px_0px_0px_rgba(25,28,33,0.02),0px_0px_0px_1px_rgba(25,28,33,0.08)]">
+             <div className="flex justify-center items-center bg-gray-100 p-2 rounded-tl-md rounded-bl-md">
+                 <span className='text-[10px]'>{serialNumber}</span>
+             </div>
+             <div className="flex flex-col p-2">
+                 <span className='text-[10px]'>{dayjs(date).format("DD MMM YY - hh:mm a")}</span>
+                 <span className='text-[12px]'>{description}</span>
+             </div>
+             <div className="gap-2 flex flex-1 justify-end items-center">
+                 <span className='p-2'>₹ {amount}</span>
+                 <span className='flex gap-2 pr-2'>
+                    <EditSVG 
+                        onClick={handleEdit}
+                    />
+                    <DeleteSVG 
+                        onClick={handleDelete}
+                    />
+                 </span>
+             </div>
+           </div>
+    </>
 }
 
 
