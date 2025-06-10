@@ -29,8 +29,8 @@ export function Crop() {
     const sharedExpenses = sumByKey(crop.sharedExpenses,"amount");
     const youInitiallyPaid = sumByKey(crop.sharedExpenses?.filter((exp:any) => exp.initialPayer === "you"),"amount");
     const partnerInitiallyPaid = sumByKey(crop.sharedExpenses?.filter((exp:any) => exp.initialPayer === "partner"),"amount");
-    const yourTakenMoney = sumByKey(crop.sales?.filter((exp:any) => exp.cashHolder === "you"),"amount")+sumByKey(crop.yourTakenMoney,"amount");
-    const partnerTekenMoney = sumByKey(crop.sales?.filter((exp:any) => exp.cashHolder === "partner"),"amount")+sumByKey(crop.partnerTakenMoney,"amount");
+    // const yourTakenMoney = sumByKey(crop.sales?.filter((exp:any) => exp.cashHolder === "you"),"amount")+sumByKey(crop.yourTakenMoney,"amount");
+    // const partnerTekenMoney = sumByKey(crop.sales?.filter((exp:any) => exp.cashHolder === "partner"),"amount")+sumByKey(crop.partnerTakenMoney,"amount");
     const sales = sumByKey(crop.sales,"amount");
 
 
@@ -105,22 +105,24 @@ export function Crop() {
               }
               {
                   cropData && <>
-                       <CardSection title=''>
-                           <NavLink to={"/crops"}>{"<"} Back</NavLink>
-                       </CardSection>
+                       
+                       <NavLink  to={"/crops"}>{"<"} Back</NavLink>
+                       <div className="mb-4"></div>
                        
                       {
                           cropData.partnershipType === "solo" && <>
-                              <CardSection title={`📌 ${cropData.title}`}>
-                                    <div className="text-gray-600">
-                                        <p><span className="font-medium">Crop Name:</span> {cropData.cropName}</p>
-                                        <p><span className="font-medium">Description:</span> {cropData.description}</p>
-                                        <p><span className="font-medium">Partners:</span> No</p>
-                                        <p><span className="font-medium">Your Expense:</span> {sumByKey(cropData.yourExpenses,"amount")}</p>
-                                        <p><span className="font-medium">Sales:</span> {sumByKey(cropData.sales,"amount")}</p>
-                                        <p><span className="font-medium">Total Profit:</span> {sumByKey(cropData.sales,"amount")-sumByKey(cropData.yourExpenses,"amount")}</p>
-                                    </div>
-                              </CardSection>
+                              <div className="bg-white p-6 rounded-lg shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.1),0px_1px_0px_0px_rgba(25,28,33,0.02),0px_0px_0px_1px_rgba(25,28,33,0.08)] text-gray-800 mb-4">
+                                  <div className="mb-3">
+                                      <p className="text-lg mb-1"><span className="font-semibold">Crop Name:</span> {cropData.cropName}</p>
+                                      <p className="text-sm text-gray-600 italic">{cropData.description}</p>
+                                  </div>
+
+                                  <div className="border-t border-gray-200 pt-3 mt-3">
+                                      <p className="text-lg"><span className="font-semibold">Your Total Expenses:</span> <span className="text-red-600">₹{sumByKey(cropData.yourExpenses, "amount")}</span></p>
+                                      <p className="text-lg"><span className="font-semibold">Total Sales Revenue:</span> <span className="text-blue-600">₹{sumByKey(cropData.sales, "amount")}</span></p>
+                                      <p className="text-xl font-bold mt-2"><span className="font-semibold">Net Profit:</span> <span className="text-green-800">₹{sumByKey(cropData.sales, "amount") - sumByKey(cropData.yourExpenses, "amount")}</span></p>
+                                  </div>
+                              </div>
                               <CardSection title='Your Expense'>
                                     {
                                         cropData.yourExpenses.map((item: any, idx: number) => (
@@ -155,29 +157,44 @@ export function Crop() {
                       }
                       {
                           cropData.partnershipType === "partnered" && <>
-                                <CardSection title={`📌 ${cropData.title}`}>
-                                    <div className="text-gray-600">
-                                        <p><span className="font-medium">Crop Name:</span> {cropData.cropName}</p>
-                                        <p><span className="font-medium">Description:</span> {cropData.description}</p>
-                                        <p><span className="font-medium">Partners:</span> {cropData.yourName} & {cropData.partnerName}</p>
-                                        <p><span className="font-medium">Your Expense:</span> {yourExpenses}</p>
-                                        <p><span className="font-medium">Partner Expense:</span> {partnerExpenses}</p>
-                                        <p><span className="font-medium">Shared Expense:</span> {sharedExpenses}</p>
-                                        <p><span className="font-medium">Total Expense:</span> {yourExpenses+partnerExpenses+sharedExpenses}</p>
-
-                                        <p><span className="font-medium">You Initially Paid:</span> {youInitiallyPaid}</p>
-                                        <p><span className="font-medium">Partner Initially Paid:</span> {partnerInitiallyPaid}</p>
-                                        <p><span className="font-medium">Extra Money You Paid for Expenses:</span> {youInitiallyPaid-partnerInitiallyPaid}</p>
-
-                                        <p><span className="font-medium">Your Taken Money:</span> {yourTakenMoney-partnerTekenMoney}</p>
-                                        <p><span className="font-medium">Partner Taken Money:</span> {partnerTekenMoney}</p>
-                                        <p><span className="font-medium">Extra Shared Money:</span> {(yourTakenMoney-partnerTekenMoney)-partnerTekenMoney}</p>
-                                        <p><span className="font-medium">Profit Share:</span> {sales/2}</p>
-                                        
-                                        <p><span className="font-medium">Sales:</span> {sales}</p>
-                                        <p><span className="font-medium">Total Profit:</span> {sales-(yourExpenses+partnerExpenses+sharedExpenses)}</p>
+                                <div className="mb-4">
+                                    {/* Project Details Card */}
+                                    <div className="bg-white p-5 rounded-lg shadow mb-5">
+                                            <h3 className="text-xl font-bold mb-3 text-green-600">Project Overview</h3>
+                                            <p><span className="font-medium">Crop Name:</span> {cropData.cropName}</p>
+                                            <p><span className="font-medium">Description:</span> {cropData.description}</p>
+                                            <p><span className="font-medium">Partners:</span> {cropData.yourName} & {cropData.partnerName}</p>
                                     </div>
-                                </CardSection>
+
+                                    {/* Expense Summary Card */}
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-5">
+                                            <div className="bg-white p-5 rounded-lg shadow">
+                                            <h3 className="text-xl font-bold mb-3 text-red-600">Expenses</h3>
+                                            <p><span className="font-medium">Your Direct Expense:</span> ₹{yourExpenses}</p>
+                                            <p><span className="font-medium">Partner Direct Expense:</span> ₹{partnerExpenses}</p>
+                                            <p><span className="font-medium">Shared Project Expense:</span> ₹{sharedExpenses}</p>
+                                            <p className="text-lg font-bold mt-2 text-blue-700">Total Project Expense: ₹{yourExpenses + partnerExpenses + sharedExpenses}</p>
+                                            </div>
+
+                                            {/* Initial Payments Card */}
+                                            <div className="bg-white p-5 rounded-lg shadow">
+                                            <h3 className="text-xl font-bold mb-3 text-orange-600">Payments & Balances</h3>
+                                            <p><span className="font-medium">You Paid Initially:</span> ₹{youInitiallyPaid}</p>
+                                            <p><span className="font-medium">Partner Paid Initially:</span> ₹{partnerInitiallyPaid}</p>
+                                            {youInitiallyPaid - partnerInitiallyPaid !== 0 && (
+                                                <p className="text-red-500"><span className="font-medium">Amount You Need to Settle:</span> ₹{youInitiallyPaid - (yourExpenses + (sharedExpenses / 2)) - (sales / 2)}</p>
+                                            )}
+                                            </div>
+                                    </div>
+
+                                    {/* Profit and Sales Card */}
+                                    <div className="bg-white p-5 rounded-lg shadow">
+                                            <h3 className="text-xl font-bold mb-3 text-purple-600">Sales & Profit</h3>
+                                            <p><span className="font-medium">Total Sales Revenue:</span> ₹{sales}</p>
+                                            <p><span className="font-medium">Profit Share (Per Partner):</span> ₹{sales / 2}</p>
+                                            <p className="text-xl font-bold mt-2 text-green-800">Net Project Profit: ₹{sales - (yourExpenses + partnerExpenses + sharedExpenses)}</p>
+                                    </div>
+                                </div>
                                 <CardSection title='Your Expense'>
                                     {
                                         cropData.yourExpenses.map((item: any, idx: number) => (
@@ -300,14 +317,46 @@ interface CardSectionProps {
 }
 
 function CardSection({children,title}: CardSectionProps){
-
+    const [showData, setShowData] = useState(false);
 
     return <>
         <div className="bg-gray-100 p-2 md:p-6 rounded-xl mb-2">
             {
-                title && <h3 className="text-lg font-semibold text-gray-800 mb-2">{title}</h3>
+                title && <div className={`flex justify-between items-center ${showData? "mb-2":""}`}>
+                    <h3 className="text-lg font-semibold text-gray-800">{title}</h3>
+                    {/* {
+                        !showData && <>
+                            <span onClick={()=>setShowData(!showData)} title='Show Data' className='border border-gray-300 p-2 rounded-full'>
+                                <svg className='cursor-pointer' xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 48 48" id="Arrow-Up--Streamline-Ionic-Filled" height={20} width={20} ><desc>{"\n    Arrow Up Streamline Icon: https://streamlinehq.com\n  "}</desc><path fill="#000000" fillRule="evenodd" d="M26.2176 1.3985c-1.2248 -1.2247 -3.2104 -1.2247 -4.4351 0l-18.816 18.816c-1.2247 1.2247 -1.2247 3.2104 0 4.4351 1.2247 1.2246 3.2103 1.2246 4.4351 0L20.864 11.187v33.1971c0 1.7319 1.404 3.1359 3.136 3.1359 1.732 0 3.1361 -1.404 3.1361 -3.1359V11.187l13.4624 13.4626c1.2247 1.2246 3.2104 1.2246 4.4351 0 1.2246 -1.2247 1.2246 -3.2104 0 -4.4351l-18.816 -18.816Z" clipRule="evenodd" strokeWidth={1} /></svg>
+                            </span>
+                        </>
+                    }
+                    {
+                        showData && <>
+                            <span onClick={()=>setShowData(!showData)} title='Hide Data' className='border border-gray-300 p-2 rounded-full'>
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 48 48" id="Arrow-Down--Streamline-Ionic-Filled" height={20} width={20} ><desc>{"\n    Arrow Down Streamline Icon: https://streamlinehq.com\n  "}</desc><path fill="#000000" fillRule="evenodd" d="M27.1361 3.616C27.1361 1.884 25.732 0.48 24 0.48s-3.136 1.404 -3.136 3.136v33.1971L7.4016 23.3505c-1.2247 -1.2247 -3.2104 -1.2247 -4.4351 0 -1.2246 1.2248 -1.2246 3.2104 0 4.4351l18.816 18.816c1.2248 1.2246 3.2104 1.2246 4.4351 0l18.816 -18.816c1.2246 -1.2247 1.2246 -3.2103 0 -4.4351 -1.2248 -1.2247 -3.2104 -1.2247 -4.4351 0L27.1361 36.8131V3.616Z" clipRule="evenodd" strokeWidth={1} /></svg>
+                            </span>
+                        </>
+                    } */}
+                    <button
+                        onClick={() => setShowData(!showData)}
+                        title={showData ? 'Hide Data' : 'Show Data'}
+                        className="flex items-center space-x-2 px-4 py-2 rounded-full border border-gray-300 hover:bg-gray-100 transition-colors duration-200"
+                        aria-expanded={showData} // Accessibility: indicates if the controlled region is expanded
+                        aria-controls="data-display-area" // Accessibility: links to the ID of the content being toggled
+                    >
+                    {showData ? (
+                        // Down arrow when data is shown (to indicate collapsing)
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 48 48" id="Arrow-Down--Streamline-Ionic-Filled" height={15} width={15} ><desc>{"\n    Arrow Down Streamline Icon: https://streamlinehq.com\n  "}</desc><path fill="#000000" fillRule="evenodd" d="M27.1361 3.616C27.1361 1.884 25.732 0.48 24 0.48s-3.136 1.404 -3.136 3.136v33.1971L7.4016 23.3505c-1.2247 -1.2247 -3.2104 -1.2247 -4.4351 0 -1.2246 1.2248 -1.2246 3.2104 0 4.4351l18.816 18.816c1.2248 1.2246 3.2104 1.2246 4.4351 0l18.816 -18.816c1.2246 -1.2247 1.2246 -3.2103 0 -4.4351 -1.2248 -1.2247 -3.2104 -1.2247 -4.4351 0L27.1361 36.8131V3.616Z" clipRule="evenodd" strokeWidth={1} /></svg>
+                    ) : (
+                        // Up arrow when data is hidden (to indicate expanding)
+                       <svg className='cursor-pointer' xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 48 48" id="Arrow-Up--Streamline-Ionic-Filled" height={15} width={15} ><desc>{"\n    Arrow Up Streamline Icon: https://streamlinehq.com\n  "}</desc><path fill="#000000" fillRule="evenodd" d="M26.2176 1.3985c-1.2248 -1.2247 -3.2104 -1.2247 -4.4351 0l-18.816 18.816c-1.2247 1.2247 -1.2247 3.2104 0 4.4351 1.2247 1.2246 3.2103 1.2246 4.4351 0L20.864 11.187v33.1971c0 1.7319 1.404 3.1359 3.136 3.1359 1.732 0 3.1361 -1.404 3.1361 -3.1359V11.187l13.4624 13.4626c1.2247 1.2246 3.2104 1.2246 4.4351 0 1.2246 -1.2247 1.2246 -3.2104 0 -4.4351l-18.816 -18.816Z" clipRule="evenodd" strokeWidth={1} /></svg>
+                    )}
+                    <span className="text-gray-700 font-medium">{showData ? 'Hide Data' : 'Show Data'}</span>
+                    </button>
+                </div>
             }
-            {children}
+            {showData && children}
         </div>
     </>
 }
@@ -335,7 +384,7 @@ function Card({handleEdit,handleDelete,serialNumber,date,description,amount}:Car
                  <span className='text-[12px]'>{description}</span>
              </div>
              <div className="gap-2 flex flex-1 justify-end items-center">
-                 <span className='p-2'>₹ {amount}</span>
+                 <span className='p-2 flex gap-[2px]'><span>₹</span><span>{amount}</span></span>
                  {
                     showCrupButtons && <>
                          <span className='flex gap-2 pr-2'>
