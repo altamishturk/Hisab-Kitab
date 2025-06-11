@@ -30,7 +30,7 @@ export function Crop() {
     const youInitiallyPaid = sumByKey(crop.sharedExpenses?.filter((exp:any) => exp.initialPayer === "you"),"amount");
     const partnerInitiallyPaid = sumByKey(crop.sharedExpenses?.filter((exp:any) => exp.initialPayer === "partner"),"amount");
     // const yourTakenMoney = sumByKey(crop.sales?.filter((exp:any) => exp.cashHolder === "you"),"amount")+sumByKey(crop.yourTakenMoney,"amount");
-    // const partnerTekenMoney = sumByKey(crop.sales?.filter((exp:any) => exp.cashHolder === "partner"),"amount")+sumByKey(crop.partnerTakenMoney,"amount");
+    const partnerTekenMoney = sumByKey(crop.sales?.filter((exp:any) => exp.cashHolder === "partner"),"amount")+sumByKey(crop.partnerTakenMoney,"amount");
     const sales = sumByKey(crop.sales,"amount");
 
 
@@ -182,7 +182,7 @@ export function Crop() {
                                             <p><span className="font-medium">You Paid Initially:</span> ₹{youInitiallyPaid}</p>
                                             <p><span className="font-medium">Partner Paid Initially:</span> ₹{partnerInitiallyPaid}</p>
                                             {youInitiallyPaid - partnerInitiallyPaid !== 0 && (
-                                                <p className="text-red-500"><span className="font-medium">Amount You Need to Settle:</span> ₹{youInitiallyPaid - (yourExpenses + (sharedExpenses / 2)) - (sales / 2)}</p>
+                                                <p className="text-red-500"><span className="font-medium">Amount You Need to Settle:</span> ₹{(sales / 2)-(partnerTekenMoney)}</p>
                                             )}
                                             </div>
                                     </div>
