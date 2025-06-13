@@ -8,6 +8,8 @@ import { Home } from "./pages/Home";
 import { Crops } from "./pages/crops";
 import { Crop } from "./pages/crop";
 import { ErrorElement } from "./components/ErrorElement";
+import { Persons } from "./pages/persons";
+import { Person } from "./pages/person";
 
 const Layout = () => (
   <div className="w-[100vw] min-h-[100vh]  bg-gray-200">
@@ -41,6 +43,14 @@ export const router = createBrowserRouter([
       {
         path: "/crops/:cropId",
         element: <Crop/>,
+      },
+      {
+        path: "/persons",
+        element: <Persons/>,
+      },
+      {
+        path: "/person/:personId",
+        element: <Person/>,
       },
       {
         path: "/login",

@@ -14,6 +14,8 @@ import timeRoutes from "./routes/time";
 import emailRoutes from "./routes/email";
 import cardRoutes from "./routes/card";
 import cropRoutes from "./routes/crop";
+import personRoutes from "./routes/person";
+import borrowTransactionRoutes from "./routes/borrowTransaction";
 
 dotenv.config();
 const app = exporess();
@@ -35,6 +37,8 @@ app.use("/api/v1/times",timeRoutes);
 app.use("/api/v1/emails",emailRoutes);
 app.use("/api/v1/cards",cardRoutes);
 app.use("/api/v1/crops",cropRoutes);
+app.use("/api/v1/people",personRoutes);
+app.use("/api/v1/borrow-transactions",borrowTransactionRoutes);
 
 
 const endpoints = expressListEndpoints(app);

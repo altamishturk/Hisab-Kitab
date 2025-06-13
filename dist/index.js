@@ -18,6 +18,8 @@ const time_1 = __importDefault(require("./routes/time"));
 const email_1 = __importDefault(require("./routes/email"));
 const card_1 = __importDefault(require("./routes/card"));
 const crop_1 = __importDefault(require("./routes/crop"));
+const person_1 = __importDefault(require("./routes/person"));
+const borrowTransaction_1 = __importDefault(require("./routes/borrowTransaction"));
 dotenv_1.default.config();
 const app = (0, express_1.default)();
 const port = process.env.PORT || 4001;
@@ -33,6 +35,8 @@ app.use("/api/v1/times", time_1.default);
 app.use("/api/v1/emails", email_1.default);
 app.use("/api/v1/cards", card_1.default);
 app.use("/api/v1/crops", crop_1.default);
+app.use("/api/v1/people", person_1.default);
+app.use("/api/v1/borrow-transactions", borrowTransaction_1.default);
 const endpoints = (0, express_list_endpoints_1.default)(app);
 console.log(endpoints);
 app.listen(port, () => {
