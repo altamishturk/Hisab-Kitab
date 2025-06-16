@@ -1,4 +1,4 @@
-import { SetStateAction, useState } from "react";
+import { SetStateAction, useEffect, useState } from "react";
 import { DeleteSVG } from "../../../components/SVGs/DeleteSVG";
 import { EditSVG } from "../../../components/SVGs/EditSVG";
 import { capitalizeName } from "../../../utils/capitalizeName";
@@ -6,7 +6,8 @@ import { ConfirmDeleteModal } from "../../../components/ConfirmDeleteModal";
 import { axiosInstance } from "../../../utils";
 import { EditPersonModal } from "./EditPersonModal";
 import { useNavigate } from "react-router";
-import { Button } from "../../../components/Button";
+import { toast } from "react-toastify";
+import { sumByKey } from "../../../utils/sumByKey";
 
 type Person = {
   _id: string;
@@ -82,16 +83,47 @@ interface PersonCardProps {
 const PersonCard = ({person,idx,handleDelete,handleEdit}: PersonCardProps) => {
     const [showCrupButtons, setShowCrupButtons] = useState(false);
     const navigation = useNavigate();
+    const [borrowTransacctions, setBorrowTransacctions] = useState<any[] | null>(null);
+    const [amountIOwe, setAmountIOwe] = useState(0);
     
 
+    useEffect(() => {
+            (async () => {
+                if(person){
+                    try {
+                        
+                        const response = await axiosInstance.get(`/borrow-transactions/user/${person._id}`);
+    
+                        if(response.data){
+                            setBorrowTransacctions(response.data);
+                        }
+                        
+                    } catch (error) {
+                        console.log(error);
+                        toast.error("Server Error!");
+                    }
+                }
+            })()
+    }, [person]);
+
+
+    useEffect(() => {
+            if(borrowTransacctions){
+                const iGot = sumByKey(borrowTransacctions.filter(tran => tran.from),"amount");
+                const iGave = sumByKey(borrowTransacctions.filter(tran => tran.to),"amount");
+                const remaning = iGot-iGave;
+                setAmountIOwe(remaning);
+            }
+    }, [borrowTransacctions]);
+
     return <>
-            <div key={person._id} className="cursor-pointer p-4 border rounded-md shadow-sm bg-white">
+            <div key={person._id} className="p-4 border rounded-md shadow-sm bg-white">
                 <div className="flex items-center">
-                    <div onClick={() => {setShowCrupButtons((p) => !p)}} className="bg-gray-400 w-[20px] h-[20px] rounded-full text-[10px] flex justify-center items-center text-white mr-2">
+                    <div onClick={() => {setShowCrupButtons((p) => !p)}} className="cursor-pointer bg-blue-600 w-[20px] h-[20px] rounded-full text-[10px] flex justify-center items-center text-white mr-2">
                         {idx+1}
                     </div>
                     <div className="flex items-center gap-3 flex-wrap flex-1">
-                        <h2 className="text-lg font-semibold text-gray-900">{capitalizeName(person.name)}</h2>
+                        <h2 onClick={() => {navigation(`/person/${person._id}`)}} className="cursor-pointer text-lg font-semibold text-blue-600 underline">{capitalizeName(person.name)}</h2>
                         {person.email && (
                             <p className="text-sm text-gray-600">
                             📧 <span className="ml-1">{person.email}</span>
@@ -103,7 +135,17 @@ const PersonCard = ({person,idx,handleDelete,handleEdit}: PersonCardProps) => {
                             </p>
                         )}
                     </div>
-                    <Button onClick={() => {navigation(`/person/${person._id}`)}}>View Detail</Button>
+                    <div>
+                        {
+                            amountIOwe === 0 && <span className="text-green-600 font-semibold">Settled Up</span>
+                        }
+                        {
+                            amountIOwe > 0 && <span>You will give: ₹ {amountIOwe}</span>
+                        }
+                        {
+                            amountIOwe < 0 && <span>You will get: ₹ {Math.abs(amountIOwe)}</span>
+                        }
+                    </div>
                     {
                         showCrupButtons && <>
                             <div className="ml-4">

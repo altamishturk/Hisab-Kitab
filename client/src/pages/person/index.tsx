@@ -10,6 +10,7 @@ import { YouGotModal } from './components/YouGotModal';
 import { TransactionCard } from './components/TransactionCard';
 import { ConfirmDeleteModal } from '../../components/ConfirmDeleteModal';
 import { EditTransectionModal } from './components/EditTransectionModal';
+import { sumByKey } from '../../utils/sumByKey';
 
 export function Person() {
     const {
@@ -21,10 +22,12 @@ export function Person() {
         setIdToDelete,
         handleConfirmDelete,
         idToEdit,
-        setIdToEdit
+        setIdToEdit,
+        amountIOwe
     } = useLogic();
     const [youGotModalOpen, setYouGotModalOpen] = useState(false);
     const [youGaveModalOpen, setYouGaveModalOpen] = useState(false);
+    
 
   return (
         <Section>
@@ -38,7 +41,18 @@ export function Person() {
                 {
                     person && <>
                         <div className="mt-4 bg-white shadow-sm rounded-md p-2 flex items-center gap-3 flex-wrap flex-1">
-                            <h2 className="text-lg font-semibold text-gray-900">{capitalizeName(person.name)}</h2>
+                            <h2 className="text-lg font-semibold text-gray-900 w-full flex justify-between p-2">
+                                <span>{capitalizeName(person.name)}</span>
+                                {
+                                    amountIOwe === 0 && <span>Settled Up</span>
+                                }
+                                {
+                                    amountIOwe > 0 && <span>You will give: ₹ {amountIOwe}</span>
+                                }
+                                {
+                                    amountIOwe < 0 && <span>You will get: ₹ {Math.abs(amountIOwe)}</span>
+                                }
+                            </h2>
                             {person.email && (
                                 <p className="text-sm text-gray-600">
                                 📧 <span className="ml-1">{person.email}</span>
@@ -91,6 +105,7 @@ function useLogic(){
     const [borrowTransacctions, setBorrowTransacctions] = useState<any[] | null>(null);
     const [idToDelete, setIdToDelete] = useState("");
     const [idToEdit, setIdToEdit] = useState("");
+    const [amountIOwe, setAmountIOwe] = useState(0);
 
     const handleConfirmDelete = async () => {
 
@@ -150,6 +165,16 @@ function useLogic(){
         })()
     }, [person]);
 
+
+    useEffect(() => {
+        if(borrowTransacctions){
+            const iGot = sumByKey(borrowTransacctions.filter(tran => tran.from),"amount");
+            const iGave = sumByKey(borrowTransacctions.filter(tran => tran.to),"amount");
+            const remaning = iGot-iGave;
+            setAmountIOwe(remaning);
+        }
+    }, [borrowTransacctions]);
+
     return {
         person,
         isLoading,
@@ -159,7 +184,8 @@ function useLogic(){
         setIdToDelete,
         handleConfirmDelete,
         idToEdit,
-        setIdToEdit
+        setIdToEdit,
+        amountIOwe
     }
 }
 
