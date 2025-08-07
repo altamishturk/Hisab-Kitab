@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.deleteTransaction = exports.updateTransaction = exports.getTransactionById = exports.getAllTransactionsOfUser = exports.getAllTransactions = exports.createTransaction = void 0;
 const borrowTransaction_1 = require("../models/borrowTransaction");
+const person_1 = require("../models/person");
 // ✅ Create a new borrow transaction
 const createTransaction = async (req, res) => {
     try {
@@ -14,6 +15,7 @@ const createTransaction = async (req, res) => {
             borrowedAt,
         });
         const saved = await transaction.save();
+        await person_1.Person.findByIdAndUpdate(from || to, { updatedAt: new Date() });
         res.status(201).json(saved);
     }
     catch (error) {
@@ -80,6 +82,7 @@ const updateTransaction = async (req, res) => {
             throw new Error("Transaction not found");
             // if (!updated) return res.status(404).json({ message: 'Transaction not found' });
         }
+        await person_1.Person.findByIdAndUpdate(updated.from || updated.to, { updatedAt: new Date() });
         res.json(updated);
     }
     catch (error) {
@@ -96,6 +99,7 @@ const deleteTransaction = async (req, res) => {
             throw new Error("Transaction not found");
             // if (!deleted) return res.status(404).json({ message: 'Transaction not found' });
         }
+        await person_1.Person.findByIdAndUpdate(deleted.from || deleted.to, { updatedAt: new Date() });
         res.json({ message: 'Transaction deleted successfully' });
     }
     catch (error) {

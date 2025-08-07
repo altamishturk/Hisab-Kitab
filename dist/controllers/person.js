@@ -18,7 +18,7 @@ exports.createPerson = createPerson;
 // ✅ Get all people
 const getAllPeople = async (_req, res) => {
     try {
-        const people = await person_1.Person.find().sort({ createdAt: -1 });
+        const people = await person_1.Person.find().sort({ updatedAt: -1 });
         res.json({ people });
     }
     catch (error) {
