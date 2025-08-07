@@ -18,7 +18,7 @@ export const createPerson = async (req: Request, res: Response) => {
 // ✅ Get all people
 export const getAllPeople = async (_req: Request, res: Response) => {
   try {
-    const people = await Person.find().sort({ createdAt: -1 });
+    const people = await Person.find().sort({ updatedAt: -1 });
 
     res.json({people});
 

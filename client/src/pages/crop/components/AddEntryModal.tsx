@@ -41,13 +41,14 @@ export function AddEntryModal({setCropData,cropId,addItemType,onClose}:AddEntryM
 
 
                     try {
-                        
+                        addForm.setValue("isSavingData",true);
                         const response = await axiosInstance.post(`/crops/${url}/${cropId}`,data);
                         
                         if(response?.data.crop){
                             setCropData(response?.data.crop);
                             onClose();
                         }
+                        addForm.setValue("isSavingData",false);
 
                     } catch (error) {
                         

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { axiosInstance } from '../../utils';
 import { NavLink, useParams } from 'react-router';
 import Section from '../../components/Section';
@@ -11,7 +11,7 @@ import { EditEntryModal } from './components/EditEntryModal';
 import { EditItemType, ItemType } from './types';
 import { AddEntryModal } from './components/AddEntryModal';
 import { ConfirmDeleteModal } from '../../components/ConfirmDeleteModal';
-
+import generatePDF from 'react-to-pdf';
 
 
 
@@ -32,6 +32,7 @@ export function Crop() {
     // const yourTakenMoney = sumByKey(crop.sales?.filter((exp:any) => exp.cashHolder === "you"),"amount")+sumByKey(crop.yourTakenMoney,"amount");
     const partnerTekenMoney = sumByKey(crop.sales?.filter((exp:any) => exp.cashHolder === "partner"),"amount")+sumByKey(crop.partnerTakenMoney,"amount");
     const sales = sumByKey(crop.sales,"amount");
+    const targetRef = useRef(null);
 
 
     const handleDelete = async () => {
@@ -105,8 +106,10 @@ export function Crop() {
               }
               {
                   cropData && <>
-                       
-                       <NavLink  to={"/crops"}>{"<"} Back</NavLink>
+                       <div className="flex justify-between">
+                            <NavLink  to={"/crops"}>{"<"} Back</NavLink>
+                            <button onClick={() => generatePDF(targetRef, {filename: 'page.pdf'})} className='text-black underline'>Download PDF</button>
+                       </div>
                        <div className="mb-4"></div>
                        
                       {
@@ -157,7 +160,7 @@ export function Crop() {
                       }
                       {
                           cropData.partnershipType === "partnered" && <>
-                                <div className="mb-4">
+                                <div className="mb-4" ref={targetRef}>
                                     {/* Project Details Card */}
                                     <div className="bg-white p-5 rounded-lg shadow mb-5">
                                             <h3 className="text-xl font-bold mb-3 text-green-600">Project Overview</h3>
@@ -179,6 +182,7 @@ export function Crop() {
                                             {/* Initial Payments Card */}
                                             <div className="bg-white p-5 rounded-lg shadow">
                                             <h3 className="text-xl font-bold mb-3 text-orange-600">Payments & Balances</h3>
+                                            <p><span className="font-medium">Partner Got Money:</span> ₹{partnerTekenMoney}</p>
                                             <p><span className="font-medium">You Paid Initially:</span> ₹{youInitiallyPaid}</p>
                                             <p><span className="font-medium">Partner Paid Initially:</span> ₹{partnerInitiallyPaid}</p>
                                             {youInitiallyPaid - partnerInitiallyPaid !== 0 && (

@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import { BorrowTransaction } from '../models/borrowTransaction';
+import { Person } from '../models/person';
 
 // ✅ Create a new borrow transaction
 export const createTransaction = async (req: Request, res: Response) => {
@@ -15,6 +16,9 @@ export const createTransaction = async (req: Request, res: Response) => {
     });
 
     const saved = await transaction.save();
+
+    await Person.findByIdAndUpdate(from || to,{updatedAt: new Date()});
+
     res.status(201).json(saved);
   } catch (error) {
     res.status(500).json({ message: 'Failed to create transaction', error });
@@ -77,11 +81,16 @@ export const updateTransaction = async (req: Request, res: Response) => {
       new: true,
     });
 
+    
     if(!updated){
-        throw new Error("Transaction not found")
-        // if (!updated) return res.status(404).json({ message: 'Transaction not found' });
+      throw new Error("Transaction not found")
+      // if (!updated) return res.status(404).json({ message: 'Transaction not found' });
     }
+
+    await Person.findByIdAndUpdate(updated.from || updated.to,{updatedAt: new Date()});
+    
     res.json(updated);
+ 
   } catch (error) {
     res.status(500).json({ message: 'Failed to update transaction', error });
   }
@@ -97,6 +106,8 @@ export const deleteTransaction = async (req: Request, res: Response) => {
         throw new Error("Transaction not found")
         // if (!deleted) return res.status(404).json({ message: 'Transaction not found' });
     }
+
+    await Person.findByIdAndUpdate(deleted.from || deleted.to,{updatedAt: new Date()});
 
     res.json({ message: 'Transaction deleted successfully' });
   } catch (error) {
