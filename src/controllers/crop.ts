@@ -1,7 +1,13 @@
 import { Request, Response } from "express";
 import {Crop} from "../models/crop";
 
+(async () => {
+  // const crop = await Crop.findByIdAndUpdate("689590469fc9303aa96cc1bc",{updatedAt: new Date()},{new: true});
+  // // const crop = await Crop.updateMany({},{updatedAt: new Date()},{new: true});
 
+  // console.log((crop as any)?.updatedAt);
+  
+})()
 
 export const createCrop = async (req: Request, res: Response) => {
   try {
@@ -15,10 +21,10 @@ export const createCrop = async (req: Request, res: Response) => {
 
 export const getAllCrops = async (req: Request, res: Response) => {
   try {
-    // console.log((req as any));
-    
-    const crops = await Crop.find();
+    const crops = await Crop.find().sort({updatedAt: -1}).lean();
+
     res.status(200).json({crops});
+    
   } catch (error) {
     res.status(500).json({ message: "Error fetching crops", error });
   }
@@ -68,6 +74,7 @@ export const addYourExpense = async (req: Request, res: Response) => {
         $push: {yourExpenses: req.body}
       },{ new: true, runValidators: true });
 
+      
       if (!crop) {
         throw new Error("Crop not found");
       }
@@ -163,8 +170,7 @@ export const addSharedExpenses = async (req: Request, res: Response) => {
       const crop = await Crop.findByIdAndUpdate(req.params.cropId,{
         $push: {sharedExpenses: req.body}
       },{ new: true, runValidators: true });
-
-
+      
 
       if (!crop) {
         throw new Error("Crop not found");
@@ -301,6 +307,10 @@ export const updatePartnerTakenMoney = async (req: Request, res: Response) => {
 
 export const addSale = async (req: Request, res: Response) => {
   try {
+
+      if(req.body.cashHolder === "both" && (Number(req.body.amountYouHold) + Number(req.body.amountPartnerHold)) !== Number(req.body.amount)){
+        throw new Error("Your And Partner Amount Does not match with total Amount");
+      }
       
       const crop = await Crop.findByIdAndUpdate(req.params.cropId,{
         $push: {sales: {...req.body}}

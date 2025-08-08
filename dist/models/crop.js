@@ -105,5 +105,5 @@ const CropSchema = new mongoose_1.Schema({
         ref: "user",
         required: true
     }
-});
+}, { timestamps: true });
 exports.Crop = mongoose_1.default.model("crop", CropSchema);

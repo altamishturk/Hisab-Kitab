@@ -11,10 +11,6 @@ const PersonSchema = new Schema<Iperson>(
     name: { type: String, unique: true, lowercase: true, trim: true },
     email: { type: String },
     phoneNumber: { type: String },
-  },
-  { 
-    timestamps: true
-  }
-);
+  },{timestamps: true});
 
 export const Person = model<Iperson>('person', PersonSchema);

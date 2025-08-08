@@ -6,7 +6,5 @@ const PersonSchema = new mongoose_1.Schema({
     name: { type: String, unique: true, lowercase: true, trim: true },
     email: { type: String },
     phoneNumber: { type: String },
-}, {
-    timestamps: true
-});
+}, { timestamps: true });
 exports.Person = (0, mongoose_1.model)('person', PersonSchema);

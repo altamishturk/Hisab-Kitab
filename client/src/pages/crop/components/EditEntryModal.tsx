@@ -22,6 +22,8 @@ export function EditEntryModal({setCropData,editItem,cropId,onClose}:EditEntryMo
                 const editForm = useForm();   
                 const isSavingData = editForm.watch("isSavingData"); 
                 const middleUrl = editForm.watch("middleUrl"); 
+                const cashHolder = editForm.watch("cashHolder"); 
+                const initialPayer = editForm.watch("initialPayer"); 
                 
 
                 const handleSubmit = async (data:any) => {
@@ -64,6 +66,8 @@ export function EditEntryModal({setCropData,editItem,cropId,onClose}:EditEntryMo
                                 editForm.setValue("date",formatDateForDatetimeLocal(new Date(item.date)));
                                 editForm.setValue("initialPayer",item.initialPayer);
                                 editForm.setValue("middleUrl","shared-expense");
+                                editForm.setValue("youPaid",item.youPaid);
+                                editForm.setValue("partnerPaid",item.partnerPaid);
                             }
                             if(editItem.itemType === "yourTakenMoney"){
                                 editForm.setValue("amount",item.amount);
@@ -85,6 +89,8 @@ export function EditEntryModal({setCropData,editItem,cropId,onClose}:EditEntryMo
                                 editForm.setValue("soldTo",item.soldTo);
                                 editForm.setValue("cashHolder",item.cashHolder);
                                 editForm.setValue("middleUrl","sale");
+                                editForm.setValue("amountYouHold",item.amountYouHold);
+                                editForm.setValue("amountPartnerHold",item.amountPartnerHold);
                             }
                             editForm.setValue("isSavingData",false);
                         } catch (error) {
@@ -128,9 +134,20 @@ export function EditEntryModal({setCropData,editItem,cropId,onClose}:EditEntryMo
                                         {
                                             label: "Partner",
                                             value: "partner"
+                                        },
+                                        {
+                                            label: "Both",
+                                            value: "both"
                                         }
                                       ]}
                                     />
+
+                                    {
+                                        initialPayer === "both" && <>
+                                            <Input required formHandler={editForm} fieldName='youPaid' type="number" placeholder='0' label='You Paid*'/>
+                                            <Input required formHandler={editForm} fieldName='partnerPaid' type="number" placeholder='0' label='Partner Paid*'/>
+                                        </>
+                                    }
                                 </>
                             }
                             {
@@ -147,9 +164,20 @@ export function EditEntryModal({setCropData,editItem,cropId,onClose}:EditEntryMo
                                         {
                                             label: "Partner",
                                             value: "partner"
+                                        },
+                                        {
+                                            label: "Both",
+                                            value: "both"
                                         }
                                       ]}
                                     />
+
+                                    {
+                                        cashHolder === "both" && <>
+                                            <Input required formHandler={editForm} fieldName='amountYouHold' type="number" placeholder='0' label='Amount You Hold*'/>
+                                            <Input required formHandler={editForm} fieldName='amountPartnerHold' type="number" placeholder='0' label='Amount Partner Hold*'/>
+                                        </>
+                                    }
                                 </>
                             }
 

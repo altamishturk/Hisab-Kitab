@@ -2,6 +2,11 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.deleteSales = exports.deletePartnerTakenMoney = exports.deleteYourTakenMoney = exports.deleteSharedExpenses = exports.deletePartnerExpense = exports.deleteYourExpense = exports.deleteCrop = exports.updateSales = exports.addSale = exports.updatePartnerTakenMoney = exports.addPartnerTakenMoney = exports.updateYourTakenMoney = exports.addYourTakenMoney = exports.updateSharedExpenses = exports.addSharedExpenses = exports.updatePartnerExpense = exports.addPartnerExpense = exports.updateYourExpense = exports.addYourExpense = exports.updateCrop = exports.getCropById = exports.getAllCrops = exports.createCrop = void 0;
 const crop_1 = require("../models/crop");
+(async () => {
+    // const crop = await Crop.findByIdAndUpdate("689590469fc9303aa96cc1bc",{updatedAt: new Date()},{new: true});
+    // // const crop = await Crop.updateMany({},{updatedAt: new Date()},{new: true});
+    // console.log((crop as any)?.updatedAt);
+})();
 const createCrop = async (req, res) => {
     try {
         const crop = await crop_1.Crop.create({ ...req.body, user: req.user._id });
@@ -14,8 +19,7 @@ const createCrop = async (req, res) => {
 exports.createCrop = createCrop;
 const getAllCrops = async (req, res) => {
     try {
-        // console.log((req as any));
-        const crops = await crop_1.Crop.find();
+        const crops = await crop_1.Crop.find().sort({ updatedAt: -1 }).lean();
         res.status(200).json({ crops });
     }
     catch (error) {
@@ -234,6 +238,9 @@ const updatePartnerTakenMoney = async (req, res) => {
 exports.updatePartnerTakenMoney = updatePartnerTakenMoney;
 const addSale = async (req, res) => {
     try {
+        if (req.body.cashHolder === "both" && (Number(req.body.amountYouHold) + Number(req.body.amountPartnerHold)) !== Number(req.body.amount)) {
+            throw new Error("Your And Partner Amount Does not match with total Amount");
+        }
         const crop = await crop_1.Crop.findByIdAndUpdate(req.params.cropId, {
             $push: { sales: { ...req.body } }
         }, { new: true, runValidators: true });

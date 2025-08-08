@@ -27,10 +27,10 @@ export function Crop() {
     const yourExpenses = sumByKey(crop.yourExpenses,"amount");
     const partnerExpenses = sumByKey(crop.partnerExpenses,"amount");
     const sharedExpenses = sumByKey(crop.sharedExpenses,"amount");
-    const youInitiallyPaid = sumByKey(crop.sharedExpenses?.filter((exp:any) => exp.initialPayer === "you"),"amount");
-    const partnerInitiallyPaid = sumByKey(crop.sharedExpenses?.filter((exp:any) => exp.initialPayer === "partner"),"amount");
-    // const yourTakenMoney = sumByKey(crop.sales?.filter((exp:any) => exp.cashHolder === "you"),"amount")+sumByKey(crop.yourTakenMoney,"amount");
-    const partnerTekenMoney = sumByKey(crop.sales?.filter((exp:any) => exp.cashHolder === "partner"),"amount")+sumByKey(crop.partnerTakenMoney,"amount");
+    // const youInitiallyPaid = sumByKey(crop.sharedExpenses?.filter((exp:any) => exp.initialPayer === "you"),"amount") + sumByKey(crop.sharedExpenses?.filter((exp:any) => exp.initialPayer === "both"),"youPaid");
+    // const partnerInitiallyPaid = sumByKey(crop.sharedExpenses?.filter((exp:any) => exp.initialPayer === "partner"),"amount") + + sumByKey(crop.sharedExpenses?.filter((exp:any) => exp.initialPayer === "both"),"partnerPaid");;
+    const yourTakenMoney = sumByKey(crop.sales?.filter((exp:any) => exp.cashHolder === "you"),"amount")+sumByKey(crop.sales?.filter((exp:any) => exp.cashHolder === "both"),"amountYouHold")+sumByKey(crop.yourTakenMoney,"amount");
+    const partnerTekenMoney = sumByKey(crop.sales?.filter((exp:any) => exp.cashHolder === "partner"),"amount")+sumByKey(crop.sales?.filter((exp:any) => exp.cashHolder === "both"),"amountPartnerHold")+sumByKey(crop.partnerTakenMoney,"amount");
     const sales = sumByKey(crop.sales,"amount");
     const targetRef = useRef(null);
 
@@ -182,12 +182,22 @@ export function Crop() {
                                             {/* Initial Payments Card */}
                                             <div className="bg-white p-5 rounded-lg shadow">
                                             <h3 className="text-xl font-bold mb-3 text-orange-600">Payments & Balances</h3>
+                                            <p><span className="font-medium">You Got Money:</span> ₹{yourTakenMoney}</p>
                                             <p><span className="font-medium">Partner Got Money:</span> ₹{partnerTekenMoney}</p>
-                                            <p><span className="font-medium">You Paid Initially:</span> ₹{youInitiallyPaid}</p>
-                                            <p><span className="font-medium">Partner Paid Initially:</span> ₹{partnerInitiallyPaid}</p>
-                                            {youInitiallyPaid - partnerInitiallyPaid !== 0 && (
-                                                <p className="text-red-500"><span className="font-medium">Amount You Need to Settle:</span> ₹{(sales / 2)-(partnerTekenMoney)}</p>
-                                            )}
+                                            {/* <p><span className="font-medium">You Paid Initially:</span> ₹{youInitiallyPaid}</p>
+                                            <p><span className="font-medium">Partner Paid Initially:</span> ₹{partnerInitiallyPaid}</p> */}
+                                            {yourTakenMoney - partnerTekenMoney !== 0 && <>
+                                                {
+                                                    (yourTakenMoney - partnerTekenMoney) > 0 && <>
+                                                        <p className="text-red-500"><span className="font-medium">You will Give:</span> ₹{(sales / 2)-(partnerTekenMoney)}</p>
+                                                    </>
+                                                }
+                                                {
+                                                    (yourTakenMoney - partnerTekenMoney) < 0 && <>
+                                                        <p className="text-green-500"><span className="font-medium">You will Get:</span> ₹{(sales / 2)-(yourTakenMoney)}</p>
+                                                    </>
+                                                }
+                                            </>}
                                             </div>
                                     </div>
 

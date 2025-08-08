@@ -131,7 +131,8 @@ const CropSchema = new Schema<ICrop>({
         ref: "user",
         required: true
   }
-});
+},
+{ timestamps: true});
 
 
 export const Crop = mongoose.model<ICrop>("crop",CropSchema);
