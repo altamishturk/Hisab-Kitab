@@ -155,10 +155,16 @@ export const updatePartnerExpense = async (req: Request, res: Response) => {
 
 export const addSharedExpenses = async (req: Request, res: Response) => {
   try {
-      
+    
+      if(req.body.initialPayer === "both" && (Number(req.body.youPaid) + Number(req.body.partnerPaid)) !== Number(req.body.amount)){
+        throw new Error("Your And Partner Amount Does not match with total Amount");
+      }
+
       const crop = await Crop.findByIdAndUpdate(req.params.cropId,{
         $push: {sharedExpenses: req.body}
       },{ new: true, runValidators: true });
+
+
 
       if (!crop) {
         throw new Error("Crop not found");

@@ -5,6 +5,7 @@ import { Modal } from "../../../components/Modal";
 import { ItemType } from "../types";
 import { axiosInstance } from "../../../utils";
 import { InputRadio } from "../../../components/InputRadio";
+import { useEffect } from "react";
 
 interface AddEntryModalProps {
     onClose: any;
@@ -16,7 +17,9 @@ interface AddEntryModalProps {
 export function AddEntryModal({setCropData,cropId,addItemType,onClose}:AddEntryModalProps){
                 const addForm = useForm();   
                 const isSavingData = addForm.watch("isSavingData"); 
-                // const middleUrl = addForm.watch("middleUrl"); 
+                const cashHolder = addForm.watch("cashHolder"); 
+                const initialPayer = addForm.watch("initialPayer"); 
+                
 
                 const handleSubmit = async (data:any) => {
                     let url = "";
@@ -58,6 +61,16 @@ export function AddEntryModal({setCropData,cropId,addItemType,onClose}:AddEntryM
                     }
                 }
 
+                useEffect(() => {
+                    if(initialPayer !== "both"){
+                        addForm.setValue("youPaid",0);
+                        addForm.setValue("partnerPaid",0);
+                    }
+                    if(cashHolder !== "both"){
+                        addForm.setValue("amountYouHold",0);
+                        addForm.setValue("amountPartnerHold",0);
+                    }
+                }, [cashHolder,initialPayer,addForm]);
 
                 return <>
                     <Modal 
@@ -90,9 +103,20 @@ export function AddEntryModal({setCropData,cropId,addItemType,onClose}:AddEntryM
                                         {
                                             label: "Partner",
                                             value: "partner"
+                                        },
+                                        {
+                                            label: "Both",
+                                            value: "both"
                                         }
                                       ]}
                                     />
+
+                                    {
+                                        initialPayer === "both" && <>
+                                            <Input required formHandler={addForm} fieldName='youPaid' type="number" placeholder='0' label='You Paid*'/>
+                                            <Input required formHandler={addForm} fieldName='partnerPaid' type="number" placeholder='0' label='Partner Paid*'/>
+                                        </>
+                                    }
                                 </>
                             }
                             {
@@ -109,9 +133,20 @@ export function AddEntryModal({setCropData,cropId,addItemType,onClose}:AddEntryM
                                         {
                                             label: "Partner",
                                             value: "partner"
+                                        },
+                                        {
+                                            label: "Both",
+                                            value: "both"
                                         }
                                       ]}
                                     />
+
+                                    {
+                                        cashHolder === "both" && <>
+                                            <Input required formHandler={addForm} fieldName='amountYouHold' type="number" placeholder='0' label='Amount You Hold*'/>
+                                            <Input required formHandler={addForm} fieldName='amountPartnerHold' type="number" placeholder='0' label='Amount Partner Hold*'/>
+                                        </>
+                                    }
                                 </>
                             }
             

@@ -48,7 +48,19 @@ const SharedExpenseSchema = new mongoose_1.Schema({
     note: { type: String, default: "" },
     paymentMode: { type: String, enum: ["online", "offline"], required: true, default: "offline" },
     date: { type: Date, required: true },
-    initialPayer: { type: String, enum: ["you", "partner"], required: true }
+    initialPayer: {
+        type: String,
+        enum: ["you", "partner", "both"],
+        required: true
+    },
+    youPaid: {
+        type: Number,
+        default: 0,
+    },
+    partnerPaid: {
+        type: Number,
+        default: 0,
+    }
 });
 const TakenMoneySchema = new mongoose_1.Schema({
     amount: { type: Number, required: true },
@@ -65,7 +77,9 @@ const SaleSchema = new mongoose_1.Schema({
     note: { type: String, default: "" },
     paymentMode: { type: String, enum: ["online", "offline"], required: true, default: "offline" },
     date: { type: Date, required: true },
-    cashHolder: { type: String, enum: ["you", "partner"], required: true }
+    cashHolder: { type: String, enum: ["you", "partner", "both"], required: true },
+    amountYouHold: { type: Number, default: 0 },
+    amountPartnerHold: { type: Number, default: 0 }
 });
 const CropSchema = new mongoose_1.Schema({
     title: { type: String, required: true },

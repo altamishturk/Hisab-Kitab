@@ -8,8 +8,10 @@ interface Expense {
   date: Date;
 }
 
-interface SharedExpense extends Expense{
-  initialPayer: "you" | "partner"
+interface SharedExpense extends Expense {
+  initialPayer: "you" | "partner" | "both",
+  youPaid: number;
+  partnerPaid: number;
 }
 
 interface TakenMoney {
@@ -28,7 +30,9 @@ interface Sale {
   note: string;
   paymentMode: "online" | "offline";
   date: Date;
-  cashHolder: "you" | "partner"
+  cashHolder: "you" | "partner" | "both";
+  amountYouHold: number;
+  amountPartnerHold: number;
 }
 
 
@@ -66,7 +70,19 @@ const SharedExpenseSchema = new Schema<SharedExpense>({
   note: { type: String, default: "" },
   paymentMode: { type: String, enum: ["online", "offline"], required: true,default: "offline" },
   date: { type: Date, required: true },
-  initialPayer: { type: String, enum: ["you","partner"], required: true}
+  initialPayer: { 
+    type: String, 
+    enum: ["you","partner","both"], 
+    required: true
+  },
+  youPaid: {
+    type: Number,
+    default: 0,
+  },
+  partnerPaid: {
+    type: Number,
+    default: 0,
+  }
 });
 
 const TakenMoneySchema = new Schema<TakenMoney>({
@@ -85,7 +101,9 @@ const SaleSchema = new Schema<Sale>({
   note: { type: String, default: ""},
   paymentMode: { type: String, enum: ["online", "offline"], required: true, default: "offline"},
   date: { type: Date, required: true },
-  cashHolder: { type: String, enum: ["you","partner"], required: true}
+  cashHolder: { type: String, enum: ["you","partner","both"], required: true},
+  amountYouHold: {type: Number,default: 0},
+  amountPartnerHold: {type: Number,default: 0}
 });
 
 
