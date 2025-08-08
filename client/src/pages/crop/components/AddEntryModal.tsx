@@ -12,9 +12,10 @@ interface AddEntryModalProps {
     addItemType: ItemType;
     cropId: string;
     setCropData: any;
+    partnershipType: "solo" | "partnered";
 }
 
-export function AddEntryModal({setCropData,cropId,addItemType,onClose}:AddEntryModalProps){
+export function AddEntryModal({setCropData,cropId,addItemType,onClose,partnershipType}:AddEntryModalProps){
                 const addForm = useForm();   
                 const isSavingData = addForm.watch("isSavingData"); 
                 const cashHolder = addForm.watch("cashHolder"); 
@@ -90,7 +91,7 @@ export function AddEntryModal({setCropData,cropId,addItemType,onClose}:AddEntryM
                             }
 
                             {
-                                addItemType === "sharedExpenses" && <>
+                                (addItemType === "sharedExpenses" && partnershipType !== "solo") && <>
                                     <InputRadio
                                       formHandler={addForm}
                                       fieldName="initialPayer"
@@ -120,7 +121,7 @@ export function AddEntryModal({setCropData,cropId,addItemType,onClose}:AddEntryM
                                 </>
                             }
                             {
-                                addItemType === "sales" && <>
+                                (addItemType === "sales" && partnershipType !== "solo") && <>
                                     <InputRadio
                                       formHandler={addForm}
                                       fieldName="cashHolder"

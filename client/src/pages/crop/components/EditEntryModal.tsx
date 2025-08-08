@@ -13,12 +13,13 @@ interface EditEntryModalProps {
     cropId: string | undefined;
     editItem: EditItemType;
     setCropData: any;
+    partnershipType: "solo" | "partnered";
 }
 
 
 
 
-export function EditEntryModal({setCropData,editItem,cropId,onClose}:EditEntryModalProps){
+export function EditEntryModal({setCropData,editItem,cropId,onClose,partnershipType}:EditEntryModalProps){
                 const editForm = useForm();   
                 const isSavingData = editForm.watch("isSavingData"); 
                 const middleUrl = editForm.watch("middleUrl"); 
@@ -151,7 +152,7 @@ export function EditEntryModal({setCropData,editItem,cropId,onClose}:EditEntryMo
                                 </>
                             }
                             {
-                                editItem.itemType === "sales" && <>
+                                (editItem.itemType === "sales" && partnershipType !== "solo") && <>
                                     <InputRadio
                                       formHandler={editForm}
                                       fieldName="cashHolder"

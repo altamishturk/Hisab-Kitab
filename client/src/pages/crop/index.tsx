@@ -96,6 +96,7 @@ export function Crop() {
 
 
 
+
   return (
         <Section>
           <div className='pt-5 md:pt-10'>
@@ -317,10 +318,10 @@ export function Crop() {
 
               
               {
-                editItem && <EditEntryModal setCropData={setCropData} editItem={editItem}  cropId={cropId} onClose={()=>{setEditItem(null)}}/> 
+                editItem && <EditEntryModal partnershipType={cropData.partnershipType} setCropData={setCropData} editItem={editItem}  cropId={cropId} onClose={()=>{setEditItem(null)}}/> 
               }
               {
-                cropId && addItemType && <AddEntryModal setCropData={setCropData} cropId={cropId} addItemType={addItemType} onClose={() => {setAddItemType(null)}}/>
+                cropId && addItemType && <AddEntryModal partnershipType={cropData.partnershipType} setCropData={setCropData} cropId={cropId} addItemType={addItemType} onClose={() => {setAddItemType(null)}}/>
               }
 
               <ConfirmDeleteModal

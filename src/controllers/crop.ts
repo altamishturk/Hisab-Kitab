@@ -1,13 +1,6 @@
 import { Request, Response } from "express";
 import {Crop} from "../models/crop";
 
-(async () => {
-  // const crop = await Crop.findByIdAndUpdate("689590469fc9303aa96cc1bc",{updatedAt: new Date()},{new: true});
-  // // const crop = await Crop.updateMany({},{updatedAt: new Date()},{new: true});
-
-  // console.log((crop as any)?.updatedAt);
-  
-})()
 
 export const createCrop = async (req: Request, res: Response) => {
   try {
@@ -311,14 +304,23 @@ export const addSale = async (req: Request, res: Response) => {
       if(req.body.cashHolder === "both" && (Number(req.body.amountYouHold) + Number(req.body.amountPartnerHold)) !== Number(req.body.amount)){
         throw new Error("Your And Partner Amount Does not match with total Amount");
       }
+
+      const pCrop = await Crop.findById(req.params.cropId);
+
+      if (!pCrop) {
+        throw new Error("Crop not found");
+      }
+
+      if(pCrop.partnershipType === "solo"){
+        req.body.cashHolder = "you";
+      }
+
+
       
       const crop = await Crop.findByIdAndUpdate(req.params.cropId,{
         $push: {sales: {...req.body}}
       },{ new: true, runValidators: true });
 
-      if (!crop) {
-        throw new Error("Crop not found");
-      }
 
       res.status(200).json({crop});
 
