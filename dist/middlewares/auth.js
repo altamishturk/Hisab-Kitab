@@ -8,7 +8,8 @@ const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const isLoggedIn = async (req, res, next) => {
     try {
         // check token first in cookies
-        let token = req.cookies.token;
+        // let token = req.cookies.token;
+        let token = undefined;
         // if token not found in cookies, check if header contains Auth field
         if (!token && req.header("Authorization")) {
             token = req.header("Authorization").replace("Bearer ", "");

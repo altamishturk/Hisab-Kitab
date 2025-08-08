@@ -7,7 +7,8 @@ export const isLoggedIn =  async (req:Request,res:Response,next:NextFunction) =>
 
     try {
                 // check token first in cookies
-            let token = req.cookies.token;
+            // let token = req.cookies.token;
+            let token = undefined;
 
             // if token not found in cookies, check if header contains Auth field
             if (!token && req.header("Authorization")) {
