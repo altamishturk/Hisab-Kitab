@@ -12,6 +12,8 @@ import { EditItemType, ItemType } from './types';
 import { AddEntryModal } from './components/AddEntryModal';
 import { ConfirmDeleteModal } from '../../components/ConfirmDeleteModal';
 import generatePDF from 'react-to-pdf';
+import ExpenseSplit from './components/ExpenseSplit';
+import SalesSplit from './components/SalesSplit';
 
 
 
@@ -94,8 +96,9 @@ export function Crop() {
         })()
     }, [cropId]);
 
-
-
+    
+    console.log(crop);
+    
 
   return (
         <Section>
@@ -259,13 +262,22 @@ export function Crop() {
                                                 date={new Date(item.date)} 
                                                 description={item.description} 
                                                 amount={item.amount}
+                                                initialPayer={item.initialPayer}
+                                                youPaid={item.youPaid}
+                                                partnerPaid={item.partnerPaid}
                                                 handleEdit={() => {setEditItem({itemId: item._id,itemType: "sharedExpenses"})}}
                                                 handleDelete={() => {setDeleteItem({itemId: item._id,itemType: "sharedExpenses"})}}
+                                                type='sharedExpenses'
                                             />
                                         ))
                                     }
                                     <AddButton label='New Entry' onClick={()=>{setAddItemType("sharedExpenses")}}/>
                                 </CardSection>
+
+                                <CardSection title='Expense Split'>
+                                    <ExpenseSplit expenses={cropData.sharedExpenses}/>
+                                </CardSection>
+
                                 <CardSection title='Your Taken Monay'>
                                     {
                                         cropData.yourTakenMoney.map((item: any, idx: number) => (
@@ -304,12 +316,19 @@ export function Crop() {
                                                 date={new Date(item.date)} 
                                                 description={item.description} 
                                                 amount={item.amount}
+                                                cashHolder={item.cashHolder}
+                                                amountYouHold={item.amountYouHold}
+                                                amountPartnerHold={item.amountPartnerHold}
+                                                type='sales'
                                                 handleEdit={() => {setEditItem({itemId: item._id,itemType: "sales"})}}
                                                 handleDelete={() => {setDeleteItem({itemId: item._id,itemType: "sales"})}}
                                             />
                                         ))
                                     }
                                     <AddButton label='New Entry' onClick={()=>{setAddItemType("sales")}}/>
+                                </CardSection>
+                                <CardSection title='Sales Split'>
+                                    <SalesSplit sales={cropData.sales}/>
                                 </CardSection>
                           </>
                       }
@@ -393,15 +412,22 @@ interface CardProps {
     date: Date;
     description: string;
     amount: number;
+    initialPayer?: 'you' | 'partner' | 'both';
+    youPaid?: number;
+    partnerPaid?: number;
+    cashHolder?: 'you' | 'partner' | 'both';
+    amountYouHold?: number;
+    amountPartnerHold?: number;
     handleEdit: () => void;
     handleDelete: () => void;
+    type?: "sales" | "sharedExpenses";
 }
 
-function Card({handleEdit,handleDelete,serialNumber,date,description,amount}:CardProps){
+function Card({handleEdit,handleDelete,serialNumber,date,description,amount,initialPayer,youPaid,partnerPaid,cashHolder,amountYouHold,amountPartnerHold,type}:CardProps){
     const [showCrupButtons, setShowCrupButtons] = useState(false);
 
     return <>
-            <div className="mb-2 flex rounded-md bg-white shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.1),0px_1px_0px_0px_rgba(25,28,33,0.02),0px_0px_0px_1px_rgba(25,28,33,0.08)]">
+            <div className="hover:bg-green-100 mb-2 flex rounded-md bg-white shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.1),0px_1px_0px_0px_rgba(25,28,33,0.02),0px_0px_0px_1px_rgba(25,28,33,0.08)]">
              <div onClick={()=>setShowCrupButtons(p => !p)} className="cursor-pointer flex justify-center items-center bg-gray-100 p-2 rounded-tl-md rounded-bl-md">
                  <span className='text-[10px]'>{serialNumber}</span>
              </div>
@@ -410,7 +436,36 @@ function Card({handleEdit,handleDelete,serialNumber,date,description,amount}:Car
                  <span className='text-[12px]'>{description}</span>
              </div>
              <div className="gap-2 flex flex-1 justify-end items-center">
-                 <span className='p-2 flex gap-[2px]'><span>₹</span><span>{amount}</span></span>
+                 <div className="flex flex-col items-end">
+                    <span className='p-2 pb-0 flex gap-[2px] font-bold'><span>₹</span><span>{amount}</span></span>
+
+                    {/* if the card is sales card  */}
+                    {
+                        type && type === "sales" && <>
+                            <div className="flex flex-wrap text-[11px] text-gray-600">
+                                <span className="px-2 rounded">
+                                    You: ₹{cashHolder === "you"? amount:cashHolder === "both"? amountYouHold:0}
+                                </span>
+                                <span className="px-2 rounded">
+                                    Partner: ₹{cashHolder === "partner"? amount:cashHolder === "both"? amountPartnerHold:0}
+                                </span>
+                            </div>
+                        </>
+                    }
+                    {
+                        type && type === "sharedExpenses" && <>
+                            <div className="flex flex-wrap text-[11px] text-gray-600">
+                                <span className="px-2 rounded">
+                                    You: ₹{initialPayer === "you"? amount:initialPayer === "both"? youPaid:0}
+                                </span>
+                                <span className="px-2 rounded">
+                                    Partner: ₹{initialPayer === "partner"? amount:initialPayer === "both"? partnerPaid:0}
+                                </span>
+                            </div>
+                        </>
+                    }
+
+                 </div>
                  {
                     showCrupButtons && <>
                          <span className='flex gap-2 pr-2'>
