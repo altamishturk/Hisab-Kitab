@@ -20,7 +20,8 @@ const UserSchema = new mongoose_1.default.Schema({
         type: String,
         required: [true, 'email is required'],
         unique: true,
-        trim: true
+        trim: true,
+        index: true
     },
     role: {
         type: String,

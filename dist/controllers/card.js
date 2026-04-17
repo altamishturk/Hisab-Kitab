@@ -1,15 +1,14 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getVillages = exports.getCards = exports.addGaveMoney = exports.addReceivedMoney = exports.editCard = exports.createCard = void 0;
+exports.getVillages = exports.getCards = exports.deleteReceivedMoney = exports.deleteGaveMoney = exports.addGaveMoney = exports.addReceivedMoney = exports.editCard = exports.createCard = void 0;
 const card_1 = require("../models/card");
 const fetchVillageNames_1 = require("../utils/fetchVillageNames");
-(async () => {
-    // const w = await Card.findByIdAndDelete("6834048e6c1f1028d8f26629");
-    // const w = await Card.findById("683410a5b9559dd5cfb5d31d");
-    // (w?.giftReceived[0] as any).amount = 5000;
-    // await w?.save();
-    // console.log(w);
-})();
+// (async () => {
+//     const w = await Card.findById("69e26346afe7a6a864558584");
+//     console.log(w?.giftReceived);
+//     console.log(w?.giftsWeGave);
+//     console.log(w);
+// })()     
 const createCard = async (req, res, next) => {
     try {
         const card = await card_1.Card.create({ user: req.user._id, name: "Altamish", giftGiverInfo: { name: req.body.giverName, village: req.body.giverVillage } });
@@ -95,6 +94,48 @@ const addGaveMoney = async (req, res, next) => {
     }
 };
 exports.addGaveMoney = addGaveMoney;
+const deleteGaveMoney = async (req, res) => {
+    try {
+        const card = await card_1.Card.findByIdAndUpdate(req.params.cardId, {
+            $pull: {
+                giftsWeGave: { _id: req.params.gaveGiftId }
+            }
+        }, { new: true });
+        res.status(201).json({
+            success: true,
+            message: "",
+            card
+        });
+    }
+    catch (error) {
+        res.status(400).json({
+            success: false,
+            message: ""
+        });
+    }
+};
+exports.deleteGaveMoney = deleteGaveMoney;
+const deleteReceivedMoney = async (req, res) => {
+    try {
+        const card = await card_1.Card.findByIdAndUpdate(req.params.cardId, {
+            $pull: {
+                giftReceived: { _id: req.params.receviedGiftId }
+            }
+        }, { new: true });
+        res.status(201).json({
+            success: true,
+            message: "",
+            card
+        });
+    }
+    catch (error) {
+        res.status(400).json({
+            success: false,
+            message: ""
+        });
+    }
+};
+exports.deleteReceivedMoney = deleteReceivedMoney;
 function escapeRegex(text) {
     return text.replace(/[-[\]{}()*+?.,\\^$|#]/g, '\\$&');
 }

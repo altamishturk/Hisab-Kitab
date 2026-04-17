@@ -10,4 +10,6 @@ router.post("/", auth_1.isLoggedIn, card_1.createCard);
 router.put("/:cardId", auth_1.isLoggedIn, card_1.editCard); // edit card
 router.post("/add/receive/:cardId", auth_1.isLoggedIn, card_1.addReceivedMoney);
 router.post("/add/gave/:cardId", auth_1.isLoggedIn, card_1.addGaveMoney);
+router.delete("/gift/receive/:cardId/:receviedGiftId", auth_1.isLoggedIn, card_1.deleteReceivedMoney);
+router.delete("/gift/gave/:cardId/:gaveGiftId", auth_1.isLoggedIn, card_1.deleteGaveMoney);
 exports.default = router;
