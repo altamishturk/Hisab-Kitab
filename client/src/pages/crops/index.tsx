@@ -51,10 +51,10 @@ export function Crops() {
                     }
                     {crops?.map((crop: any, idx: number) => (
                         <CropItem
-                        setCrops={setCrops}
-                        key={idx}
-                        crop={crop}
-                        setCropIdToUpdate={setCropIdToUpdate}
+                            setCrops={setCrops}
+                            key={idx}
+                            crop={crop}
+                            setCropIdToUpdate={setCropIdToUpdate}
                         />
                     ))}
 

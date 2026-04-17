@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { addGaveMoney, addReceivedMoney, createCard, editCard, getCards, getVillages } from "../controllers/card";
+import { addGaveMoney, addReceivedMoney, createCard, deleteGaveMoney, deleteReceivedMoney, editCard, getCards, getVillages } from "../controllers/card";
 import { isLoggedIn } from "../middlewares/auth";
 const router = Router();
 
@@ -16,6 +16,10 @@ router.put("/:cardId",isLoggedIn,editCard); // edit card
 router.post("/add/receive/:cardId",isLoggedIn,addReceivedMoney);
 
 router.post("/add/gave/:cardId",isLoggedIn,addGaveMoney);
+
+router.delete("/gift/receive/:cardId/:receviedGiftId",isLoggedIn,deleteReceivedMoney);
+
+router.delete("/gift/gave/:cardId/:gaveGiftId",isLoggedIn,deleteGaveMoney);
 
 
 

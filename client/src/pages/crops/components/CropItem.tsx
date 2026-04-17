@@ -19,8 +19,6 @@ export function CropItem({setCrops,crop,setCropIdToUpdate}:CropItemProps) {
     const sharedExpenses = sumByKey(crop.sharedExpenses,"amount");
     const youInitiallyPaid = sumByKey(crop.sharedExpenses?.filter((exp:any) => exp.initialPayer === "you"),"amount");
     const partnerInitiallyPaid = sumByKey(crop.sharedExpenses?.filter((exp:any) => exp.initialPayer === "partner"),"amount");
-    const yourTakenMoney = sumByKey(crop.sales?.filter((exp:any) => exp.cashHolder === "you"),"amount")+sumByKey(crop.yourTakenMoney,"amount");
-    const partnerTekenMoney = sumByKey(crop.sales?.filter((exp:any) => exp.cashHolder === "partner"),"amount")+sumByKey(crop.partnerTakenMoney,"amount");
     const sales = sumByKey(crop.sales,"amount");
 
 
@@ -40,69 +38,104 @@ export function CropItem({setCrops,crop,setCropIdToUpdate}:CropItemProps) {
     }
 
   return (<>
-                {
-                    crop.partnershipType === "solo" && <>
-                        <div className="bg-white p-6 rounded-xl flex flex-col justify-between min-w-[300px] flex-1">
-                            <div className='space-y-4 '>
-                                <div className="flex items-center justify-between">
-                                    <h2 className="text-xl font-semibold text-gray-700">📌 {crop.title}</h2>
-                                    <div className="flex gap-2">
-                                        <EditSVG onClick={()=>{setCropIdToUpdate(crop._id)}}/>
-                                        <DeleteSVG onClick={()=>{setShowModal(true)}}/>
-                                    </div>    
-                                </div>
-                                <div className="text-gray-600">
-                                    <p><span className="font-medium">Crop Name:</span> {crop.cropName}</p>
-                                    <p><span className="font-medium">Description:</span> {crop.description}</p>
-                                    <p><span className="font-medium">Partners:</span> No</p>
-                                    <p><span className="font-medium">Your Expense:</span> {sumByKey(crop.yourExpenses,"amount")}</p>
-                                    <p><span className="font-medium">Sales:</span> {sumByKey(crop.sales,"amount")}</p>
-                                    <p><span className="font-medium">Total Profit:</span> {sumByKey(crop.sales,"amount")-sumByKey(crop.yourExpenses,"amount")}</p>
-                                    <p><span className="text-blue-600 underline"><NavLink to={`/crops/${crop._id}`}>View Details...</NavLink></span></p>
-                                </div>
-                            </div>
+                <div className="bg-white rounded-xl border hover:shadow-md transition p-5 flex flex-col gap-4 min-w-[300px] flex-1">
+                    {/* Top Bar */}
+                    <div className="flex justify-between items-center">
+                        <h2 className="text-md font-semibold text-gray-800 truncate">
+                        {crop.title}
+                        </h2>
+
+                        <div className="flex gap-2">
+                        <EditSVG onClick={() => setCropIdToUpdate(crop._id)} />
+                        <DeleteSVG onClick={() => setShowModal(true)} />
                         </div>
-                    </>
-                }
-                {
-                    crop.partnershipType === "partnered" && <>
-                                <div className="bg-white p-6 rounded-xl flex flex-col justify-between min-w-[300px] flex-1">
-                                    <div className='space-y-4'>
-                                        <div className="flex items-center justify-between">
-                                            <h2 className="text-xl font-semibold text-gray-700">📌 {crop.title}</h2>
-                                            <div className="flex gap-2">
-                                                <EditSVG onClick={()=>{setCropIdToUpdate(crop._id)}}/>
-                                                <DeleteSVG onClick={()=>{setShowModal(true)}}/>
-                                            </div>    
-                                        </div>
-                                        <div className="text-gray-600">
-                                            <p><span className="font-medium">Crop Name:</span> {crop.cropName}</p>
-                                            <p><span className="font-medium">Description:</span> {crop.description}</p>
-                                            <p><span className="font-medium">Partners:</span> {crop.yourName} & {crop.partnerName}</p>
+                    </div>
 
-                                            <p><span className="font-medium">Your Expense:</span> {yourExpenses}</p>
-                                            <p><span className="font-medium">Partner Expense:</span> {partnerExpenses}</p>
-                                            <p><span className="font-medium">Shared Expense:</span> {sharedExpenses}</p>
-                                            <p><span className="font-medium">Total Expense:</span> {yourExpenses+partnerExpenses+sharedExpenses}</p>
+                    {/* Highlight Section */}
+                    <div className="flex justify-between items-center bg-gray-50 rounded-lg p-3">
+                        <div>
+                        <p className="text-xs text-gray-500">Total Profit</p>
+                        <p className="text-lg font-semibold text-green-600">
+                            {crop.partnershipType === "solo"
+                            ? sumByKey(crop.sales, "amount") -
+                                sumByKey(crop.yourExpenses, "amount")
+                            : sales - (yourExpenses + partnerExpenses + sharedExpenses)}
+                        </p>
+                        </div>
 
-                                            <p><span className="font-medium">You Initially Paid:</span> {youInitiallyPaid}</p>
-                                            <p><span className="font-medium">Partner Initially Paid:</span> {partnerInitiallyPaid}</p>
-                                            <p><span className="font-medium">Extra Money You Paid for Expenses:</span> {youInitiallyPaid-partnerInitiallyPaid}</p>
+                        <div className="text-right">
+                        <p className="text-xs text-gray-500">Sales</p>
+                        <p className="text-sm font-medium text-gray-800">
+                            {crop.partnershipType === "solo"
+                            ? sumByKey(crop.sales, "amount")
+                            : sales}
+                        </p>
+                        </div>
+                    </div>
 
-                                            <p><span className="font-medium">Your Taken Money:</span> {yourTakenMoney-partnerTekenMoney}</p>
-                                            <p><span className="font-medium">Partner Taken Money:</span> {partnerTekenMoney}</p>
-                                            <p><span className="font-medium">Extra Shared Money:</span> {(yourTakenMoney-partnerTekenMoney)-partnerTekenMoney}</p>
-                                            <p><span className="font-medium">Profit Share:</span> {sales/2}</p>
-                                            
-                                            <p><span className="font-medium">Sales:</span> {sales}</p>
-                                            <p><span className="font-medium">Total Profit:</span> {sales-(yourExpenses+partnerExpenses+sharedExpenses)}</p>
-                                            <p><span className="text-blue-600 underline"><NavLink to={`/crops/${crop._id}`}>View Details...</NavLink></span></p>
-                                        </div>
-                                    </div>
-                                </div>
-                    </>
-                }
-                
+                    {/* Basic Info */}
+                    <div className="text-sm text-gray-600 space-y-1">
+                        <p><span className="text-gray-400">Crop:</span> {crop.cropName}</p>
+                        <p><span className="text-gray-400">Type:</span> {crop.partnershipType}</p>
+
+                        {crop.partnershipType === "partnered" && (
+                        <p>
+                            <span className="text-gray-400">Partners:</span>{" "}
+                            {crop.yourName} & {crop.partnerName}
+                        </p>
+                        )}
+                    </div>
+
+                    {/* Divider */}
+                    <div className="border-t"></div>
+
+                    {/* SOLO */}
+                    {crop.partnershipType === "solo" && (
+                        <div className="flex justify-between text-sm">
+                        <div>
+                            <p className="text-gray-400">Expense</p>
+                            <p className="font-medium">
+                            {sumByKey(crop.yourExpenses, "amount")}
+                            </p>
+                        </div>
+                        </div>
+                    )}
+
+                    {/* PARTNERED */}
+                    {crop.partnershipType === "partnered" && (
+                        <div className="grid grid-cols-2 gap-4 text-sm">
+
+                        {/* You */}
+                        <div className="bg-blue-50 rounded-lg p-3">
+                            <p className="text-xs text-gray-500 mb-1">You</p>
+                            <p>Expense: <span className="font-medium">{yourExpenses}</span></p>
+                            <p>Paid: <span className="font-medium">{youInitiallyPaid}</span></p>
+                        </div>
+
+                        {/* Partner */}
+                        <div className="bg-purple-50 rounded-lg p-3">
+                            <p className="text-xs text-gray-500 mb-1">Partner</p>
+                            <p>Expense: <span className="font-medium">{partnerExpenses}</span></p>
+                            <p>Paid: <span className="font-medium">{partnerInitiallyPaid}</span></p>
+                        </div>
+
+                        {/* Shared */}
+                        <div className="col-span-2 bg-gray-50 rounded-lg p-3 flex justify-between">
+                            <span className="text-gray-500">Shared Expense</span>
+                            <span className="font-medium">{sharedExpenses}</span>
+                        </div>
+                        </div>
+                    )}
+
+                    {/* CTA */}
+                    <NavLink
+                        to={`/crops/${crop._id}`}
+                        className="text-sm text-blue-600 font-medium hover:underline self-end"
+                    >
+                        View →
+                    </NavLink>
+                </div>
+
                 <ConfirmDeleteModal
                     isOpen={showModal}
                     onClose={() => setShowModal(false)}

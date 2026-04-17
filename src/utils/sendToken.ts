@@ -7,7 +7,6 @@ export const sendToken = async (req:Request,res:Response,next:NextFunction,user:
     const token = jwt.sign({user}, (process as any).env.JWT_SECRET);
 
     const options = {
-        expires: new Date(Date.now() + 1000 /*sec*/ * 60 /*min*/ * 60 /*hour*/ * 24 /*day*/ * (process as any).env.JWT_EXPITY),
         httpOnly: true,
     };
 

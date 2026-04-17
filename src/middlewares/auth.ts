@@ -1,14 +1,11 @@
 import { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
-import { Errorhandler } from "../utils/ErrorHandler";
 
 
 export const isLoggedIn =  async (req:Request,res:Response,next:NextFunction) => {
 
     try {
-                // check token first in cookies
-            // let token = req.cookies.token;
-            let token = undefined;
+            let token = req.cookies.token || undefined;
 
             // if token not found in cookies, check if header contains Auth field
             if (!token && req.header("Authorization")) {

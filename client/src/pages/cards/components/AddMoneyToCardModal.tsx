@@ -54,9 +54,9 @@ export function AddMoneyToCardModal({cardToAddMoney,setCardToAddMoney,setCards}:
                     <h2 className='text-xl font-bold text-gray-700'>{cardToAddMoney?.giftGiverInfo?.name}</h2>
                 </div>
                 <div className="flex mt-4 gap-2 items-end">
-                                    <div className="flex-1">
-                                        <input placeholder='Spouse Name...' id='spouseName' type='text' {...moneyReceivedForm.register('spouseName')} className='w-full border p-2 rounded-md'/>
-                                    </div>
+                    <div className="flex-1">
+                        <input placeholder='Your Spouse Name...' id='spouseName' type='text' {...moneyReceivedForm.register('spouseName')} className='w-full border p-2 rounded-md'/>
+                    </div>
                 </div>
                 <div className="flex mt-4 gap-2 items-end">
                                     <div className="flex-1">
@@ -66,11 +66,16 @@ export function AddMoneyToCardModal({cardToAddMoney,setCardToAddMoney,setCards}:
                                     <button onClick={moneyReceivedForm.handleSubmit((data) => handleSubmitMoneyReveived(data))} className='w-[200px] bg-blue-600 text-white p-2 rounded-md'>Add</button>
                 </div>
                 <div className="flex mt-4 gap-2 items-end">
-                                    <div className="flex-1">
-                                        <label htmlFor="reveivedGave" className='text-gray-400'>Gave Money</label>
-                                        <input id='reveivedGave' type='number' {...moneyGaveForm.register('reveivedGave')} className='w-full border p-2 rounded-md'/>
-                                    </div>
-                                    <button onClick={moneyGaveForm.handleSubmit((data) => handleSubmitMoneyGave(data))} className='w-[200px] bg-blue-600 text-white p-2 rounded-md'>Add</button>
+                    <div className="flex-1">
+                        <input placeholder='Guest Spouse Name...' id='spouseName' type='text' {...moneyGaveForm.register('spouseName')} className='w-full border p-2 rounded-md'/>
+                    </div>
+                </div>
+                <div className="flex mt-4 gap-2 items-end">
+                    <div className="flex-1">
+                        <label htmlFor="reveivedGave" className='text-gray-400'>Gave Money</label>
+                        <input id='reveivedGave' type='number' {...moneyGaveForm.register('reveivedGave')} className='w-full border p-2 rounded-md'/>
+                    </div>
+                    <button onClick={moneyGaveForm.handleSubmit((data) => handleSubmitMoneyGave(data))} className='w-[200px] bg-blue-600 text-white p-2 rounded-md'>Add</button>
                 </div>
            </Modal>        
 }

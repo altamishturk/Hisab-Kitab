@@ -7,7 +7,7 @@ import bcrypt from "bcrypt";
 
 export const signup = async (req:Request,res:Response,next:NextFunction)=>{
 
-      try {
+    try {
         const errors = validationResult(req);
 
         if (!errors.isEmpty()) {

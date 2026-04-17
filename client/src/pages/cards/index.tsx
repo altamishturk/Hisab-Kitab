@@ -115,7 +115,7 @@ export function Cards() {
                     </div>
                 }
                 {
-                    !isCardsLoading && cards?.map((card:any,idx:number) => <CardItem card={card} idx={idx} setCardToEdit={setCardToEdit} setCardToAddMoney={setCardToAddMoney} searchTerm={searchTerm}/>)
+                    !isCardsLoading && cards?.map((card:any,idx:number) => <CardItem card={card} idx={idx} setCardToEdit={setCardToEdit} setCardToAddMoney={setCardToAddMoney} searchTerm={searchTerm} setCards={setCards}/>)
                 }
             </div>
         </div>

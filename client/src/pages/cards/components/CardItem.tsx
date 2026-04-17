@@ -3,6 +3,9 @@ import { calculateTotalAmount } from '../utils/calculateTotalAmount';
 import { HighlightedText } from './highlightText';
 import { EditSVG } from '../../../components/SVGs/EditSVG';
 import { PlusSVG } from '../../../components/SVGs/PlusSVG';
+import { ConfirmDeleteModal } from '../../../components/ConfirmDeleteModal';
+import { DeleteSVG } from '../../../components/SVGs/DeleteSVG';
+import { axiosInstance } from '../../../utils';
 
 
 interface CardItemProps {
@@ -11,11 +14,70 @@ interface CardItemProps {
     card: any;
     searchTerm: string;
     setCardToAddMoney: any;
+    setCards: any;
 }
 
-export function CardItem({idx,setCardToEdit,card,searchTerm,setCardToAddMoney}:CardItemProps) {
+export function CardItem({idx,setCardToEdit,card,searchTerm,setCardToAddMoney,setCards}:CardItemProps) {
     const [showDetail, setShowDetail] = useState(false);
+    const [showModal, setShowModal] = useState(false);
+    const [id, setId] = useState("");
+    const [giftDeletionType, setGiftDeletionType] = useState<"received" | "gave">("received");
     const outstandingMoney = calculateTotalAmount(card.giftReceived)-calculateTotalAmount(card.giftsWeGave);
+
+
+    const handleDeleteReveivedMoneyOrGaveMoney = async ({
+            type, // "received" | "gave"
+            cardId,
+            giftId,
+            }: {
+            type: "received" | "gave";
+            cardId: string;
+            giftId: string;
+            }) => {
+            try {
+                const url =
+                type === "received"
+                    ? `/cards/gift/receive/${cardId}/${giftId}`
+                    : `/cards/gift/gave/${cardId}/${giftId}`;
+
+                const response = await axiosInstance.delete(url);
+
+                setCards((prevCards: any[]) =>
+                    prevCards.map((card) => {
+                        if (card._id === cardId) {
+                            return {
+                                ...card,
+                                giftReceived:
+                                type === "received"
+                                    ? card.giftReceived.filter((item: any) => item._id !== giftId)
+                                    : card.giftReceived,
+                                giftsWeGave:
+                                type === "gave"
+                                    ? card.giftsWeGave.filter((item: any) => item._id !== giftId)
+                                    : card.giftsWeGave,
+                            };
+                        }
+                        return card;
+                    })
+                );
+                
+                setShowModal(false);
+                return response.data;
+
+            } catch (error: any) {
+                console.error(error?.response?.data || error.message);
+            }
+          };
+    
+
+    const handleDelete = () => {
+
+        const giftId = id;
+        const cardId = card._id;
+
+        handleDeleteReveivedMoneyOrGaveMoney({type: giftDeletionType,cardId,giftId});
+    }
+
   
     return <div key={idx} className={`${showDetail? "border-2 border-gray-300":"border-2 border-gray-200"} flex-1 min-w-[300px] relative p-2 md:p-5 rounded-md bg-white`}> 
                 <div className="absolute top-0 left-0  h-[20px] rounded-md text-gray-300 pl-1 text-xs">{idx+1}</div>
@@ -78,19 +140,21 @@ export function CardItem({idx,setCardToEdit,card,searchTerm,setCardToAddMoney}:C
                                 }
                                 {
                                     card.giftReceived.map((gift:any,idx:number) => <>
-                                    <div className="bg-red-100 p-2 rounded-md flex gap-2" key={idx}>
+                                    <div className="bg-red-100 p-2 rounded-md flex gap-2 items-center" key={idx}>
                                         <p className='text-red-600 font-bold'> {gift.amount}</p>
                                         <p className='text-red-600'> {gift.spouseName}</p>
                                         <p className='text-red-600'>{new  Date(gift.date).toLocaleDateString()}</p>
+                                        <DeleteSVG onClick={() => {setId(gift._id);setGiftDeletionType("received");setShowModal(true);}} />
                                     </div>
                                     </>)
                                 }
                                 {
                                     card.giftsWeGave.map((gift:any,idx:number) => <>
-                                    <div className="bg-green-100 p-2 rounded-md flex gap-2" key={idx}>
+                                    <div className="bg-green-100 p-2 rounded-md flex gap-2 items-center" key={idx}>
                                         <p className='text-green-600 font-bold'>{gift.amount}</p>
                                         <p className='text-green-600'>{gift.spouseName}</p>
                                         <p className='text-green-600'>{new Date(gift.date).toLocaleDateString()}</p>
+                                        <DeleteSVG onClick={() => {setId(gift._id);setGiftDeletionType("gave");setShowModal(true);}} />
                                     </div>
                                     </>)
                                 }
@@ -99,5 +163,11 @@ export function CardItem({idx,setCardToEdit,card,searchTerm,setCardToAddMoney}:C
                     </>
                 }
                 
+                <ConfirmDeleteModal
+                    isOpen={showModal}
+                    onClose={() => setShowModal(false)}
+                    onConfirm={handleDelete}
+                    itemName={"gift"}
+                />
         </div>
 }

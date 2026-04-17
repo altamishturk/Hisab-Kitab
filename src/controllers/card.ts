@@ -3,14 +3,13 @@ import { Card } from "../models/card";
 import { fetchVillageNames } from "../utils/fetchVillageNames";
 
 
-(async () => {
-    // const w = await Card.findByIdAndDelete("6834048e6c1f1028d8f26629");
-    // const w = await Card.findById("683410a5b9559dd5cfb5d31d");
-    
-    // (w?.giftReceived[0] as any).amount = 5000;
-    // await w?.save();
-    // console.log(w);
-})()     
+// (async () => {
+//     const w = await Card.findById("69e26346afe7a6a864558584");
+
+//     console.log(w?.giftReceived);
+//     console.log(w?.giftsWeGave);
+//     console.log(w);
+// })()     
 
 export const createCard =  async (req:Request,res:Response,next:NextFunction) => {
 
@@ -100,6 +99,56 @@ export const addGaveMoney =  async (req:Request,res:Response,next:NextFunction) 
 
         const card = await Card.findByIdAndUpdate(req.params.cardId,{
             $push: {giftsWeGave: {date: new Date(),spouseName: req.body.spouseName,amount: req.body.amount}}
+        },{new: true});
+
+        res.status(201).json({
+            success: true,
+            message: "",
+            card
+        })
+
+    } catch (error) {
+        res.status(400).json({
+            success: false,
+            message: ""
+        })
+    }
+
+}
+
+export const deleteGaveMoney = async (req: Request, res: Response) => {
+
+    try {
+
+        const card = await Card.findByIdAndUpdate(req.params.cardId,{
+            $pull: {
+                      giftsWeGave: { _id: req.params.gaveGiftId }
+                }
+        },{new: true});
+
+        res.status(201).json({
+            success: true,
+            message: "",
+            card
+        })
+
+    } catch (error) {
+        res.status(400).json({
+            success: false,
+            message: ""
+        })
+    }
+
+}
+
+export const deleteReceivedMoney = async (req: Request, res: Response) => {
+
+    try {
+
+        const card = await Card.findByIdAndUpdate(req.params.cardId,{
+            $pull: {
+                      giftReceived: { _id: req.params.receviedGiftId }
+                }
         },{new: true});
 
         res.status(201).json({
