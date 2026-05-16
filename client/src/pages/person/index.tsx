@@ -23,10 +23,12 @@ export function Person() {
         handleConfirmDelete,
         idToEdit,
         setIdToEdit,
-        amountIOwe
+        amountIOwe,
+        currentBalances
     } = useLogic();
     const [youGotModalOpen, setYouGotModalOpen] = useState(false);
     const [youGaveModalOpen, setYouGaveModalOpen] = useState(false);
+
     
 
   return (
@@ -71,7 +73,9 @@ export function Person() {
                         <div className='h-4'/>
                         {
                             borrowTransacctions && borrowTransacctions.map((tran:any,idx:number) => <>
-                                <TransactionCard tran={tran} idx={idx} setIdToDelete={setIdToDelete} setIdToEdit={setIdToEdit}/>
+                                <>
+                                    <TransactionCard tran={tran} idx={idx} setIdToDelete={setIdToDelete} setIdToEdit={setIdToEdit} currentBalances={currentBalances}/>
+                                </>
                             </>)
                         }
                     </>
@@ -106,6 +110,9 @@ function useLogic(){
     const [idToDelete, setIdToDelete] = useState("");
     const [idToEdit, setIdToEdit] = useState("");
     const [amountIOwe, setAmountIOwe] = useState(0);
+    const [currentBalances, setCurrentBalances] = useState<number[] | null>(null);
+
+    
 
     const handleConfirmDelete = async () => {
 
@@ -145,6 +152,28 @@ function useLogic(){
             }
         })()
     }, [personId]);
+
+
+    const transactionsWithBalance = (arr: any) => {
+        return arr?.reduce((acc: number[], transaction: any) => {
+
+            const previousBalance =
+            acc.length > 0
+                ? acc[acc.length - 1]
+                : 0;
+
+            const clearBalance =
+            previousBalance +
+            (transaction.from
+                ? transaction.amount
+                : -transaction.amount);
+
+            acc.push(clearBalance);
+
+            return acc;
+        }, []);
+    };
+
     
     useEffect(() => {
         (async () => {
@@ -154,7 +183,7 @@ function useLogic(){
                     const response = await axiosInstance.get(`/borrow-transactions/user/${person._id}`);
 
                     if(response.data){
-                        setBorrowTransacctions(response.data);
+                        setBorrowTransacctions(response.data.reverse());
                     }
                     
                 } catch (error) {
@@ -171,6 +200,7 @@ function useLogic(){
             const iGot = sumByKey(borrowTransacctions.filter(tran => tran.from),"amount");
             const iGave = sumByKey(borrowTransacctions.filter(tran => tran.to),"amount");
             const remaning = iGot-iGave;
+            setCurrentBalances(transactionsWithBalance(borrowTransacctions));
             setAmountIOwe(remaning);
         }
     }, [borrowTransacctions]);
@@ -185,7 +215,8 @@ function useLogic(){
         handleConfirmDelete,
         idToEdit,
         setIdToEdit,
-        amountIOwe
+        amountIOwe,
+        currentBalances
     }
 }
 

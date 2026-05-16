@@ -9,9 +9,10 @@ interface TransactionCardProps {
     idx: number;
     setIdToDelete: React.Dispatch<React.SetStateAction<string>>;
     setIdToEdit: React.Dispatch<React.SetStateAction<string>>;
+    currentBalances: null | number[];
 }
 
-export function TransactionCard({setIdToEdit,setIdToDelete,tran,idx}:TransactionCardProps) {
+export function TransactionCard({setIdToEdit,setIdToDelete,tran,idx,currentBalances}:TransactionCardProps) {
     const [showCrupButtons, setShowCrupButtons] = useState(false);
 
   return (
@@ -20,11 +21,23 @@ export function TransactionCard({setIdToEdit,setIdToDelete,tran,idx}:Transaction
                     <span className='text-[10px]'>{idx+1}</span>
                 </div>
                 <div className="flex flex-col p-2">
-                            <span className='text-[10px]'>{dayjs(tran.borrowedAt).format("DD MMM YY - hh:mm a")}</span>
-                            <span className='text-[12px]'>{tran.description}</span>
+                    <span className='text-[10px]'>{dayjs(tran.borrowedAt).format("DD MMM YY - hh:mm a")}</span>
+                    <span className='text-[12px]'>{tran.description}</span>
                 </div>
                 <div className="gap-2 flex flex-1 justify-end items-center">
-                            <span className='p-2 flex gap-[2px]'><span>₹</span><span>{tran.amount}</span></span>
+                            <div className='flex flex-col'>
+                                <span className='p-2 flex gap-[2px] font-bold pb-0'><span>₹</span><span>{tran.amount}</span></span>
+                                {currentBalances && <>
+                                    {
+                                        currentBalances[idx] >=0?   <>
+                                                                    <small className='text-[12px] p-2 pt-0 text-red-500 font-semibold'>Bal: {currentBalances[idx]}</small>
+                                                                    </>:<>
+                                                                        <small className='text-[12px] p-2 pt-0 text-green-500 font-semibold'>Bal: {Math.abs(currentBalances[idx])}</small>
+                                                                    </>
+                                    }
+                                </>}
+                                
+                            </div>
                             {
                                 showCrupButtons && <>
                                     <span className='flex gap-2 pr-2'>

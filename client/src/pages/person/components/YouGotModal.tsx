@@ -29,7 +29,7 @@ export function YouGotModal({setBorrowTransacctions,person,setYouGotModalOpen}:Y
                         if(!p){
                             return [response.data]
                         }
-                        return [response.data,...p]
+                        return [...p,response.data]
                     });
                     form.setValue("isSavingData",false);
                     setYouGotModalOpen(false);
