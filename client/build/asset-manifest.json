@@ -1,0 +1,20 @@
+{
+  "files": {
+    "main.css": "/static/css/main.eb436df1.css",
+    "main.js": "/static/js/main.42f06141.js",
+    "static/js/977.37d9e8f3.chunk.js": "/static/js/977.37d9e8f3.chunk.js",
+    "static/js/455.82e7fc1a.chunk.js": "/static/js/455.82e7fc1a.chunk.js",
+    "static/media/invitation-card.png": "/static/media/invitation-card.a2c3f10cf6de711da144.png",
+    "static/media/crop.png": "/static/media/crop.6f7b8e944b56960a9d93.png",
+    "static/media/man.png": "/static/media/man.fe0ae0169d798f72afe4.png",
+    "index.html": "/index.html",
+    "main.eb436df1.css.map": "/static/css/main.eb436df1.css.map",
+    "main.42f06141.js.map": "/static/js/main.42f06141.js.map",
+    "977.37d9e8f3.chunk.js.map": "/static/js/977.37d9e8f3.chunk.js.map",
+    "455.82e7fc1a.chunk.js.map": "/static/js/455.82e7fc1a.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.eb436df1.css",
+    "static/js/main.42f06141.js"
+  ]
+}
